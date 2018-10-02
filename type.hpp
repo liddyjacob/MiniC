@@ -35,4 +35,19 @@ struct IntT : public Type{
   }
 };
 
+struct RefT : public Type
+{
+  RefT(Type* t)
+    : refT(t)
+  { }
+  void accept(Visitor& v) override{
+    return v.visit(this);
+  }
+
+  Type* what_ref_type() { return refT; } 
+
+private:
+  Type* refT;
+};
+
 void print(std::ostream& os, Type* t);

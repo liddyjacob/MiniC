@@ -8,8 +8,6 @@ using std::ostream;
 void print(ostream& os, Type* t)
 {
 
-  std::cout << "Print test\n";
-
   struct V : Visitor
   {
 
@@ -21,6 +19,10 @@ void print(ostream& os, Type* t)
     void visit(IntT* t) override { 
       os << "int";
     }
+    void visit(RefT* t) override {
+      os << "ref ";
+      print(os, t->what_ref_type());
+    } 
     
   ostream& os;
   };
