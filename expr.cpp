@@ -1,7 +1,7 @@
 #include "expr.hpp"
 
-BoolT::Type* check() const override{
-    if (op >= lt){
+Type* BinaryE::check(){
+    if (this->op >= lt){
       return new BoolT();
     }
     std::cerr << "Non-boolean binary expr\n";

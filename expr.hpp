@@ -1,33 +1,33 @@
 #pragma once
+#include <string>
+#include "type.hpp"
+
+using std::string;
 
 struct Expr{
-  virtual Type* check() const = 0;
+  virtual Type* check() = 0;
   virtual void print(std::ostream& os) const = 0;
-}
+};
 
 // Does this include int literals?
 struct NullaryE : Expr{
 };
 
 // Or this?
-enum UnOp{ addinv, mulinv, negate, lint, lbool,  
+enum UnOp{ addinv, mulinv, negate, lint, lbool};
+
 struct UnaryE : Expr{
 };
 
 
+enum BinOp{add, sub, mul, quo, rem, lt, le, gt, ge, eq, neq}; 
 
-enum BinOp{ add, sub, mul, div, rem, lt, le, gt, ge}; 
 struct BinaryE : Expr{
   BinaryE(Expr* l, BinOp p, Expr* r)
     : left(l), op(p), right(r)
   { }
 
-  Type* check() const override;{
-    if (op >= lt){
-      return new BoolT();
-    }
-    std::cerr << "Non-boolean binary expr\n";
-  }
+  Type* check() override; 
 
 private:
   Expr* left;
@@ -35,31 +35,36 @@ private:
   Expr* right;
 };
 
+struct IdentifierE : Expr{
+  IdentifierE(string s, RefT loc)
+    : name(s), ref(loc)
+  { }
 
-struct BoolE : Expr{
-  Type* check() const override{
+  Type* check() override{
+    return ref.what_ref_type();
   }
 
 private:
-  Int(
+  string name;
+  RefT ref;
+};
 
-
-  int val;
-}
+struct BoolE : Expr{
+};
 
 struct IntE : Expr{
-  Type* check() const override{
+  Type* check() override{
   }
-}
+};
 
 struct OrderE : Expr{
-  Type* check() const override{
+  Type* check() override{
   }
-}
+};
 
 struct LogicE : Expr{
-  Type* check() const override{
+  Type* check() override{
   }
-}
+};
 
 
