@@ -1,10 +1,11 @@
+#pragma once
 
 struct Expr{
   virtual Type* check() const = 0;
   virtual void print(std::ostream& os) const = 0;
 }
 
-// Does this include int?
+// Does this include int literals?
 struct NullaryE : Expr{
 };
 
@@ -17,8 +18,16 @@ struct UnaryE : Expr{
 
 enum BinOp{ add, sub, mul, div, rem, lt, le, gt, ge}; 
 struct BinaryE : Expr{
+  BinaryE(Expr* l, BinOp p, Expr* r)
+    : left(l), op(p), right(r)
+  { }
 
-
+  Type* check() const override;{
+    if (op >= lt){
+      return new BoolT();
+    }
+    std::cerr << "Non-boolean binary expr\n";
+  }
 
 private:
   Expr* left;
