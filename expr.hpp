@@ -14,15 +14,22 @@ struct NullaryE : Expr{
 };
 
 // Or this?
-enum UnOp{ addinv, mulinv, negate, lint, lbool};
-
+enum UnOp{addinv, mulinv, negate};
 struct UnaryE : Expr{
+  UnaryE(Expr* e , UnOp p)
+    : expr(e), op(p)
+  { }
+
+  Type* check() override;
+
+private:
+  Expr* expr;
+  UnOp op;
 };
 
 
 enum BinOp{add, sub, mul, quo, rem, lt, le, gt, ge, eq, neq}; 
-
-struct BinaryE : Expr{
+struct BinaryE : Expr{ 
   BinaryE(Expr* l, BinOp p, Expr* r)
     : left(l), op(p), right(r)
   { }

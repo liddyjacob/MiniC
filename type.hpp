@@ -28,7 +28,6 @@ struct BoolT : public Type{
   }
 };
 
-
 struct IntT : public Type{
   void accept(Visitor& v) override{
     return v.visit(this);
@@ -51,3 +50,5 @@ private:
 };
 
 void print(std::ostream& os, Type* t);
+
+//bool operator==(Type* t1, Type* t2) { return equal(t1, t2); }
