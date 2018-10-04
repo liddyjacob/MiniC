@@ -1,14 +1,21 @@
 #include <iostream>
 #include "type.hpp"
+#include "expr.hpp"
+#include "value.hpp"
 
 int main(){
   std::cout << "Hello, \n";
 
-  BoolT* tptr = new BoolT();
-  RefT* rptr = new RefT(tptr);
+  Type* tptr = new BoolT();
+  Type* rptr = new RefT(tptr);
+  Type* iptr = new IntT;
   print(std::cout, tptr);
   print(std::cout, rptr);
-  std::cout << " was the result of print\n";
 
+  Value v(7);
+  Expr* test = new IntE(iptr,v);
+  std::cout << " was the result of print\n";
+  print(test);
+  
   return 1;
 }
