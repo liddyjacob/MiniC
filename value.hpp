@@ -1,32 +1,54 @@
 #pragma once
-// This is borrowed from Sutton's Approach.
-// TODO Make this more fancy.
-
 
 class Value
 {
 public:
   explicit Value(int n);
-  int get_int();
-  double get_float();
+  explicit Value(bool b);
+  explicit Value(float f);
+  int get_int() const;
+  double get_float() const;
+  bool get_bool() const;
 
-private: 
-  int val;
+private:
+  //Current Lazy implementation does not use discriminated union (but should)
+  int ival;
+  float fval;
+  bool bval;
 };
 
 inline 
 Value::Value(int n)
-  : val(n)
+  : ival(n)
 { }
 
 inline 
-int Value::get_int()
+Value::Value(bool b)
+  : bval(b)
+{ }
+
+inline 
+Value::Value(float f)
+  : fval(f)
+{ }
+
+  
+inline 
+int Value::get_int() const
 {
-  return val;
+  return ival;
 }
 
 inline
-double Value::get_float()
+double Value::get_float() const
 {
-  return static_cast<double>(val);
+  return fval;
 }
+
+inline
+bool Value::get_bool() const
+{
+  return bval;
+}
+
+

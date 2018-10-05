@@ -54,7 +54,7 @@ struct Expr{
 
   Expr(Kind k, Type* t);
 
-  virtual Type* check() = 0;
+  //virtual Type* check() = 0;
   //virtual void print(std::ostream& os) const = 0;
 
   Kind kind;
@@ -103,6 +103,7 @@ struct BoolE : LiteralE{
     : LiteralE(boolL, t, val)
   { }
 
+  //Type* check() override{ return t; }
   int get_value() { return val.get_int(); }
 };
 
@@ -111,7 +112,7 @@ struct IntE : LiteralE{
     : LiteralE(intL, t, val)
   { }
 
-  Type* check() override{ return t; }
+  //Type* check() override{ return t; }
   int get_value() { return val.get_int(); }
 };
 
