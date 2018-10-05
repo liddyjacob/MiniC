@@ -2,7 +2,7 @@
 #include <string>
 #include "type.hpp"
 #include "value.hpp"
-
+#include "printer.hpp"
 
 
 // This is a D A N G E R O U S approach as
@@ -24,6 +24,7 @@ struct Expr{
   {
     boolL,
     intL,
+    floatL,
     idL, // End of nullary kinds
 
 
@@ -47,9 +48,11 @@ struct Expr{
   // Will be helpful for subcases. i.e, if e.k <= Expr::nulEND
   // then we know e is a nullary expression.
   enum KindArity{
-    nulEND = idL,
-    unEND = negate,
+    BEGIN  = 0,
+    nullEND = idL,
+    unEND  = negate,
     binEND = neq,
+    END    = neq,
   };
 
   Expr(Kind k, Type* t);
@@ -64,7 +67,11 @@ struct Expr{
 inline
 Expr::Expr(Kind k, Type* t)
   : kind(k), t(t)
-{ }
+{ 
+  if ((BEGIN > kind) || (END < kind)){
+    throw std::runtime_error ("Invalid Expression");
+  }
+}
 
 // Currently does nothing: but worth 
 // making use of
@@ -82,18 +89,22 @@ struct UnaryE : Expr{
 
 struct BinaryE : Expr{
   BinaryE(Kind k, Type* t, Expr* e1, Expr* e2)
-    : Expr(k,t), e1(e1), e2(e2)
+    : Expr(k,t), expr1(e1), expr2(e2)
   { }
 
   //Type* check() override;
-  Expr* e1;
-  Expr* e2;
+  Expr* expr1;
+  Expr* expr2;
 };
 
+// Literals are nullary
 struct LiteralE : Expr{
   LiteralE(Kind k, Type* t, Value& val)
     : Expr(k, t), val(val)
   { }
+
+  template<typename T>
+  T get_val() const {return val.get_val<T>();}
 
   Value val;
 };
@@ -116,8 +127,7 @@ struct IntE : LiteralE{
   int get_value() { return val.get_int(); }
 };
 
-void print(Expr* e);
-
+void print(Printer& p, Expr* e);
 
 
 // NO IDENTIFYERS YET!

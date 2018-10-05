@@ -1,6 +1,11 @@
 // TODO LIST
 
+Printing Suite.
+
 Add test suite for each thing. In fact, I am gonna do that TONIGHT ( October 4, 10:00pm)
+* Expr: Working on.
+* Statements: Not done
+* Types: A little in main.
 
 For classes with Kind ENUMs, Add some validity checkers
 for kinds.

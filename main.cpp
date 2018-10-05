@@ -1,7 +1,8 @@
 #include <iostream>
 #include "type.hpp"
-#include "expr.hpp"
 #include "value.hpp"
+#include "expr.hpp"
+#include "printer.hpp"
 
 int main(){
   std::cout << "Hello, \n";
@@ -12,10 +13,12 @@ int main(){
   print(std::cout, tptr);
   print(std::cout, rptr);
 
+
+  Printer p(std::cout);
   Value v(7);
   Expr* test = new IntE(iptr,v);
   std::cout << " was the result of print\n";
-  print(test);
+  print(p, test);
   
   return 1;
 }

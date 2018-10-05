@@ -1,6 +1,11 @@
+#include <iostream>
+
 #include "expr.hpp"
+#include "printer.hpp"
 
 int main(){
+
+  Printer p(std::cout);
 
   // This seems like the right syntax.
   Type* boolT = new BoolT();
@@ -28,4 +33,7 @@ int main(){
   
   Expr* eqexpr1 = new BinaryE(Expr::eq, boolT, boolexpr1, boolexpr2);
   Expr* eqexpr2 = new BinaryE(Expr::eq, boolT, boolexpr1, boolexpr3);
+
+  print(p, eqexpr1);
+
 }
