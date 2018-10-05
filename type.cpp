@@ -133,4 +133,5 @@ equal(Type* a, Type* b)
 
   V vis(b);
   a->accept(vis);
-  return vis.result;}
+  return vis.result;
+}

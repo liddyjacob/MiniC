@@ -1,7 +1,0 @@
-// TODO LIST
-
-For classes with Kind ENUMs, Add some validity checkers
-for kinds.
-
-Finish BLOCK statement.
-

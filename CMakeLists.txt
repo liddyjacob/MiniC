@@ -6,3 +6,7 @@ add_executable(miniC main.cpp
                      type.cpp
                      expr.cpp
                      stmt.cpp)
+
+add_executable(exprtest exprtest.cpp
+                        expr.cpp
+                        type.cpp)
