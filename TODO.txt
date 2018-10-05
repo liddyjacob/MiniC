@@ -1,8 +1,12 @@
 // TODO LIST
 
+Add test suite for each thing. In fact, I am gonna do that TONIGHT ( October 4, 10:00pm)
+
 For classes with Kind ENUMs, Add some validity checkers
 for kinds.
 
 Finish BLOCK statement.
 
 Test Statements
+
+Add Declarations. But only after testing expressions, statements, types.
