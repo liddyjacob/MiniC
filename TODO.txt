@@ -2,8 +2,10 @@
 
 Printing Suite.
 
+Add checking setting:
+
 Add test suite for each thing. In fact, I am gonna do that TONIGHT ( October 4, 10:00pm)
-* Expr: Working on.
+* Expr: Printing done. All current functions done.
 * Statements: Not done
 * Types: A little in main.
 

@@ -14,3 +14,10 @@ add_executable(exprtest exprtest.cpp
                         type.cpp
                         value.cpp
                         printer.cpp)
+
+add_executable(stmttest stmttest.cpp
+                        stmt.cpp
+                        expr.cpp
+                        type.cpp
+                        value.cpp
+                        printer.cpp)

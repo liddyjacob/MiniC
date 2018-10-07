@@ -14,11 +14,11 @@ struct Printer{
 
   void printTabs(){
     if (indent == 0) { return; } 
-    for (int i = 0; i < 2 * indent - 1; ++i){
+    for (int i = 0; i <2 * indent; ++i){
       os << " ";
     }
     
-    os << "|-->";
+    //os << "|-->";
   }
   
   void operator<<(int out){

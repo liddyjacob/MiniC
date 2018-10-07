@@ -1,6 +1,7 @@
 #pragma once
 #include "expr.hpp"
-
+#include <array>
+#include <vector>
 // TODO: Add some safty checks for if the Kind is valid?
 
 struct Stmt
@@ -32,6 +33,13 @@ struct Stmt
   { }
 
   Kind kind;
+};
+
+struct BreakS : Stmt{
+  BreakS()
+    : Stmt(breakS)
+  { }
+
 };
 
 struct ContinueS : Stmt{
@@ -103,4 +111,22 @@ struct IfS : BinaryS{
   Expr* cond;
 };
 
-void Print(Stmt* s);
+struct KaryS : Stmt{
+  KaryS(Kind k, std::initializer_list<Stmt*> args)
+    : Stmt(k), stmtvector(args)
+  { }
+
+  std::vector<Stmt*> stmtvector;
+};
+
+struct BlockS : KaryS{
+  BlockS(std::initializer_list<Stmt*> args)
+    : KaryS(blockS, args)
+  { 
+  }
+
+};
+
+  
+
+void print(Printer& p,Stmt* s);

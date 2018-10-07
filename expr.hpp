@@ -103,9 +103,6 @@ struct LiteralE : Expr{
     : Expr(k, t), val(val)
   { }
 
-  template<typename T>
-  T get_val() const {return val.get_val<T>();}
-
   Value val;
 };
 
@@ -114,8 +111,6 @@ struct BoolE : LiteralE{
     : LiteralE(boolL, t, val)
   { }
 
-  //Type* check() override{ return t; }
-  int get_value() { return val.get_int(); }
 };
 
 struct IntE : LiteralE{
@@ -123,8 +118,6 @@ struct IntE : LiteralE{
     : LiteralE(intL, t, val)
   { }
 
-  //Type* check() override{ return t; }
-  int get_value() { return val.get_int(); }
 };
 
 void print(Printer& p, Expr* e);
