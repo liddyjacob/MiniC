@@ -3,15 +3,15 @@
 void print(Printer& p, Stmt* s){
 
   if (s->kind == Stmt::blockS) { 
-    p << "{\n";
+    p << "{";
     p.indent += 1;
      
     for (Stmt* sub : static_cast<KaryS*>(s)->stmtvector){
-      p.printTabs();
+      p.NextLine();
       print(p, sub);
-      p << "\n";
     }
     p.indent -= 1;
+    p.NextLine();
     p << "}";
 
   return;
@@ -27,7 +27,7 @@ void print(Printer& p, Stmt* s){
       p << ";";
     }
     if (s->kind == Stmt::exprS) { 
-      p << "Expression Statement:\n";
+      //p << "Expression Statement:";
       p.indent+=1;
       print(p, static_cast<ExprS*>(s)->expr);
       p.indent-=1;
@@ -41,5 +41,32 @@ void print(Printer& p, Stmt* s){
     return;
   }
 
-  p << "Statement Printer";
+  if (s->kind <= Stmt::unEND){
+    if (s->kind == Stmt::whileS){
+      p << "WHILE ";
+      print(p, static_cast<WhileS*>(s)->cond);
+      p << " ";
+      print(p, static_cast<WhileS*>(s)->stmt);
+    }
+
+    return;
+  }
+
+  if (s->kind <= Stmt::binEND){
+    if (s->kind == Stmt::ifS){
+      IfS* ifs = static_cast<IfS*>(s);
+      p << "IF ";
+      print(p, ifs->cond);
+      p << " ";
+      print(p, ifs->stmt1);
+      p.NextLine();
+      p << "ELSE ";
+      print(p, ifs->stmt2);
+
+    }
+    return;
+  }
+
+      
+  p << "Statement Printer;";
 }

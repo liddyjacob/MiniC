@@ -3,14 +3,12 @@
 // Print an expression!
 void print(Printer& p, Expr* e){
   
-  p.printTabs();
-  p << "Expr: ";
-
   if (e->kind <= Expr::nullEND){
     if ((e->kind == Expr::intL || e->kind == Expr::boolL) || 
         (e->kind == Expr::floatL))
     {
-      p << static_cast<LiteralE*>(e)->val;
+      Value v =  static_cast<LiteralE*>(e)->val;
+      p << v;
     }
     if (e->kind == Expr::idL){
       p << "IDLITERAL\n";
@@ -24,19 +22,17 @@ void print(Printer& p, Expr* e){
 
     switch (e->kind){
       case Expr::addinv:
-        p << "addinv(-e)";
+        p << "-(";
         break;
       case Expr::mulinv:
-        p << "mulinv(/e)";
+        p << "/(";
         break;
       case Expr::negate:
-        p << "negate(!e)";
+        p << "!(";
         break;
-    }
-  
-    p << "(unary):\n";
-    p.indent += 1;
+    } 
     print(p, static_cast<UnaryE*>(e)->expr);
+    p << ")";
     return;
   }
 
@@ -44,47 +40,50 @@ void print(Printer& p, Expr* e){
   if (e->kind <= Expr::binEND){
     // TODO Print out details for unary expresisons.
     
+    p << "(";
+    int indent = p.indent;
+    p.indent = 0;
 
+    print(p, static_cast<BinaryE*>(e)->expr1);
+    
     switch (e->kind){
       case Expr::add:
-        p << "Add (e1 + e2)";
+        p << " + ";
         break;
       case Expr::sub:
-        p << "Sub (e1 + e2)";
+        p << " - ";
         break;
       case Expr::mul:
-        p << "Mul (e1 * e2)";
+        p << " * ";
         break;
       case Expr::quo:
-        p << "Div (e1 / e2)";
+        p << " / ";
         break;
       case Expr::rem:
-        p << "Rem (e1 % 32)";
+        p << " % ";
         break;
       case Expr::lt:
-        p << "LT  (e1 < e2)";
+        p << " < ";
         break;
       case Expr::le:
-        p << "LE  (e1 <= e2)";
+        p << " <= ";
         break;
       case Expr::gt:
-        p << "GT  (e1 > e2)";
+        p << " > ";
         break;
       case Expr::ge:
-        p << "GE  (e1 >= e2)";
+        p << " >= ";
         break;
       case Expr::eq:
-        p << "EQ  (e1 == e2)";
+        p << " == ";
         break;
       case Expr::neq:
-        p << "NEQ (e1 != e2)";
+        p << " != ";
         break;
     }
-    p << "(binary): \n";   
-    p.indent += 1;
-    print(p, static_cast<BinaryE*>(e)->expr1);
-    p << "\n";
     print(p, static_cast<BinaryE*>(e)->expr2);
+    p << ")";
+    p.indent = indent;
     return;
   }
 

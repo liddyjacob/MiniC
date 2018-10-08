@@ -26,9 +26,17 @@ int main(){
                                    new IntE(i, ieq4)
                                    )
                        );
-  Stmt* s4 = new BlockS({s1, s2, s3});
+  Stmt* s4 = new IfS(new BinaryE(Expr::le,
+                                 b, 
+                                 new IntE(i, ieq3),
+                                 new IntE(i, ieq4)
+                                ),
+                     new ReturnS(new IntE(i, ieq3)),
+                     new ContinueS()
+                     );
+  Stmt* s5 = new BlockS({s1, s2, s3, s4});
 
-  print(p, s4);
+  print(p, s5);
 
   return 0;
 }
