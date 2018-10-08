@@ -1,19 +1,14 @@
 // TODO LIST
 
-Printing Suite.
+Add Declarations. But only after testing expressions, statements, types.
 
 Add checking setting:
-
-Add test suite for each thing. In fact, I am gonna do that TONIGHT ( October 4, 10:00pm)
-* Expr: Printing done. All current functions done.
-* Statements: Not done
-* Types: A little in main.
-
 For classes with Kind ENUMs, Add some validity checkers
 for kinds.
 
-Finish BLOCK statement.
+Add test suite for each thing. In fact, I am gonna do that TONIGHT ( October 4, 10:00pm)
+* Expr: Printing done. All current functions done.
+* Statements: Printing Done.
+* Types: Not much to do..
 
-Test Statements
 
-Add Declarations. But only after testing expressions, statements, types.

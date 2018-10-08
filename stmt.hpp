@@ -16,7 +16,7 @@ struct Stmt
 
     whileS, // End of unary statements
 
-    ifS, // Binary State,emt
+    ifS, // Binary Statement
 
     blockS, // K-ary Statement
   };
