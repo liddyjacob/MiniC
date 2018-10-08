@@ -119,7 +119,7 @@ void print_sexpr(Printer& p, Expr* e){
         break;
     } 
     p << " ";
-    print(p, static_cast<UnaryE*>(e)->expr);
+    print_sexpr(p, static_cast<UnaryE*>(e)->expr);
     p << ")";
     return;
   }
@@ -169,9 +169,9 @@ void print_sexpr(Printer& p, Expr* e){
     }
 
     p << " ";
-    print(p, static_cast<BinaryE*>(e)->expr1);
+    print_sexpr(p, static_cast<BinaryE*>(e)->expr1);
     p << " ";
-    print(p, static_cast<BinaryE*>(e)->expr2);
+    print_sexpr(p, static_cast<BinaryE*>(e)->expr2);
     p << ")";
     return;
   }
