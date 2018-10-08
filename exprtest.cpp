@@ -33,7 +33,17 @@ int main(){
   
   Expr* eqexpr1 = new BinaryE(Expr::eq, boolT, boolexpr1, boolexpr2);
   Expr* eqexpr2 = new BinaryE(Expr::eq, boolT, boolexpr1, boolexpr3);
+  Expr* addexpr = new BinaryE(Expr::add, boolT, eqexpr1, eqexpr2);
 
   print(p, eqexpr1);
-
+  p.NextLine();
+  print(p, eqexpr2); 
+  p.NextLine();
+  print_sexpr(p, eqexpr1);
+  p.NextLine();
+  print_sexpr(p, eqexpr2);
+  p.NextLine();
+  print_sexpr(p, addexpr);
+  p.NextLine();
+  return 0;
 }

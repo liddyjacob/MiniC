@@ -21,3 +21,9 @@ add_executable(stmttest stmttest.cpp
                         type.cpp
                         value.cpp
                         printer.cpp)
+
+
+                      #add_executable(decltest decltest.cpp
+                      # decl.cpp
+                      # stmt.cpp
+                      # printer.cpp)

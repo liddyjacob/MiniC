@@ -13,6 +13,8 @@ using std::string;
 // 2. NextLine() will always handle the current number of tabs, 
 //    so adjust tabs before using Nextline().
 // 3. To remove tabs for the next print, set tabs to 0, then reset after.
+// 4. You can use the << operator with ints, const char*'s, strings
+//    bools, and floats.
 
 struct Printer{
   Printer(ostream& os)
@@ -21,11 +23,9 @@ struct Printer{
 
   void printTabs(){
     if (indent == 0) { return; } 
-    for (int i = 0; i <2 * indent; ++i){
+    for (int i = 0; i < 2 * indent; ++i){
       os << " ";
     }
-    
-    //os << "|-->";
   }
 
   void NextLine(){

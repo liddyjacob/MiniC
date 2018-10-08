@@ -121,7 +121,7 @@ struct IntE : LiteralE{
 };
 
 void print(Printer& p, Expr* e);
-
+void print_sexpr(Printer& p, Expr* e);
 
 // NO IDENTIFYERS YET!
 /*
