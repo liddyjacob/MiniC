@@ -2,15 +2,15 @@
 #include <string>
 #include "type.hpp"
 #include "value.hpp"
+#include "decl.hpp"
 #include "printer.hpp"
 
 
-// This is a D A N G E R O U S approach as
-// we are not using very many const and
-// private variables. In order to quickly
-// complete this project, we use this hack.
-// To make up for this, we will add some
-// COOL and D A N G E R O U S features.
+struct Decl;
+// This is a minimalist expression implementation
+// There are some missing safty features, but the
+// implementation should be relativly easy to read
+// and use
 //
 // I would eventualy like to implement an
 // unusual data type (eventually). Some
@@ -32,11 +32,15 @@ struct Expr{
     mulinv,
     negate, // End of Unary kinds
 
+
+    assign,
     add,
     sub,
     mul,
     quo,
     rem,
+    andE,
+    orE,
     lt, 
     le, 
     gt, 
@@ -118,6 +122,16 @@ struct IntE : LiteralE{
     : LiteralE(intL, t, val)
   { }
 
+};
+
+struct IDE : Expr
+{
+  // Construct d:
+  IDE(Type* t, Decl* d)
+    : Expr(idL, t), decl(d)
+  { }
+
+  Decl* decl;
 };
 
 void print(Printer& p, Expr* e);

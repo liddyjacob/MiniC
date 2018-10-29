@@ -1,10 +1,15 @@
+#pragma once
 #include <string>
 #include <vector>
 
 #include "printer.hpp"
 #include "stmt.hpp"
+#include "name.hpp"
+#include "expr.hpp"
 
-using Name = std::string;
+
+struct Stmt;
+struct Expr;
 
 
 struct Decl{

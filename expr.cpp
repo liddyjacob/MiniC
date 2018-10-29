@@ -11,15 +11,13 @@ void print(Printer& p, Expr* e){
       p << v;
     }
     if (e->kind == Expr::idL){
-      p << "IDLITERAL\n";
+      p << static_cast<IDE*>(e)->decl->name->str;
     }
     return;
   }
 
   if (e->kind <= Expr::unEND){
     // TODO Print out details for unary expresisons.
-    
-
     switch (e->kind){
       case Expr::addinv:
         p << "-(";
@@ -31,6 +29,7 @@ void print(Printer& p, Expr* e){
         p << "!(";
         break;
     } 
+
     print(p, static_cast<UnaryE*>(e)->expr);
     p << ")";
     return;
@@ -47,6 +46,9 @@ void print(Printer& p, Expr* e){
     print(p, static_cast<BinaryE*>(e)->expr1);
     
     switch (e->kind){
+      case Expr::assign:
+        p << " = ";
+        break;
       case Expr::add:
         p << " + ";
         break;
@@ -61,6 +63,12 @@ void print(Printer& p, Expr* e){
         break;
       case Expr::rem:
         p << " % ";
+        break;
+      case Expr::andE:
+        p << " and ";
+        break;
+      case Expr::orE:
+        p << " or ";
         break;
       case Expr::lt:
         p << " < ";
@@ -99,7 +107,7 @@ void print_sexpr(Printer& p, Expr* e){
       p << v;
     }
     if (e->kind == Expr::idL){
-      p << "IDL";
+      p << static_cast<IDE*>(e)->decl->name->str;
     }
     return;
   }
@@ -133,6 +141,9 @@ void print_sexpr(Printer& p, Expr* e){
 
     
     switch (e->kind){
+      case Expr::assign:
+        p << "=";
+        break;
       case Expr::add:
         p << "+";
         break;
@@ -147,6 +158,12 @@ void print_sexpr(Printer& p, Expr* e){
         break;
       case Expr::rem:
         p << "%";
+        break;
+      case Expr::andE:
+        p << "and";
+        break;
+      case Expr::orE:
+        p << "or";
         break;
       case Expr::lt:
         p << "<";

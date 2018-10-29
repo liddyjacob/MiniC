@@ -1,5 +1,8 @@
 #pragma once
 #include "expr.hpp"
+
+struct Expr;
+
 #include <array>
 #include <vector>
 // TODO: Add some safty checks for if the Kind is valid?
@@ -50,6 +53,7 @@ struct ContinueS : Stmt{
 
 // RETURN expr
 struct ReturnS : Stmt{
+
   ReturnS(Expr* e)
     : Stmt(returnS), expr(e)
   { }
