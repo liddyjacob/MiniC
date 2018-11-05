@@ -1,11 +1,12 @@
 #pragma once
 #include <iostream>
+#include "printer.hpp"
 
 class Type;
 class BoolT;
 class IntT;
 class RefT;
-
+class Printer;
 
 class Visitor
 {
@@ -20,6 +21,8 @@ public:
 struct Type
 {
   virtual void accept(Visitor& v) = 0;
+  
+
 };
 
 struct BoolT : public Type{
@@ -49,6 +52,6 @@ private:
   Type* refT;
 };
 
-void print(std::ostream& os, Type* t);
+void print(Printer& os, Type* t);
 
 //bool operator==(Type* t1, Type* t2) { return equal(t1, t2); }

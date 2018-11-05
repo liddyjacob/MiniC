@@ -5,20 +5,21 @@
 #include "printer.hpp"
 #include "stmt.hpp"
 #include "name.hpp"
+#include "type.hpp"
 #include "expr.hpp"
 
 
+struct Type;
 struct Stmt;
 struct Expr;
-
 
 struct Decl{
 
   enum Kind
   {
-    objectD,
-    referenceD,
-    functionD,
+    objectD, // var x: t = e
+    referenceD, // ref x: t = e 
+    functionD, // fun x(d1, d2, ..., ) -> t s 
   };
 
   Decl(Name* n, Kind k)
@@ -46,21 +47,20 @@ struct ReferenceD : Decl{
   ReferenceD(Name* n, Type* t, Expr* e)
     : Decl(n, referenceD), reftype(t), init(e)
   { }
-  
+
   Type* reftype;
   Expr* init;
 };
 
-
 // A function looks like:
 // [Name][Parameters] -> Output_Type Body
 struct FunctionD : Decl{
-  FunctionD(Name* n, Type* t, std::initializer_list<Decl*> parms,  Stmt* s)
-    : Decl(n, functionD), returntype(t), parameters(parms), body(s)
+  FunctionD(Name* n, std::initializer_list<Decl*> parms, Type* t, Stmt* s)
+    : Decl(n, functionD), returntype(t), params(parms), body(s)
   { }
 
   Type* returntype;
-  std::vector<Decl*> parameters;
+  std::vector<Decl*> params;
   Stmt* body;
 };
 

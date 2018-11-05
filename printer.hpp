@@ -3,9 +3,21 @@
 #include <iostream>
 #include <string>
 #include <ostream>
+#include "type.hpp"
+#include "expr.hpp"
+#include "stmt.hpp"
 
 using std::ostream;
 using std::string;
+using std::cerr;
+
+struct Type;
+struct Expr;
+struct Stmt;
+struct Printer;
+void print(Printer& p,Type* t);
+void print(Printer& p, Expr* t);
+void print(Printer& p, Stmt* s);
 
 // This is the printer. 
 // There are some rules for the printer.
@@ -33,32 +45,60 @@ struct Printer{
     printTabs();
   }
   
-  void operator<<(int out){ 
-    os << out; 
+  Printer operator<<(int out){ 
+    os << out;
+    return *this;
   }
 
-  void operator<<(const char* out){
+  Printer operator<<(const char* out){
     string searchable(out);
     *this << searchable;
+    return *this;
   }
 
-  void operator<<(string out){
+  Printer operator<<(string out){
     for (char& c : out){
       if (c == '\n') { NextLine(); }
       else os << c;
     } 
+    return *this;
   }
 
-  void operator<<(bool out){
+  Printer operator<<(bool out){
     if (out == true) { os << "TRUE"; }
     else {os << "FALSE"; }
+    return *this;
   }
 
-  void operator<<(float out){
+  Printer operator<<(float out){
     os << out; 
+    return *this;
+  }
+
+  Printer operator<<(Type* t){
+    print(*this, t);
+    return *this;
+  }
+
+  Printer operator<<(Expr* e){
+    print(*this, e);
+    return *this;
+  }
+
+  Printer operator<<(Stmt* s){
+    print(*this, s);
+    return *this;
+  }
+
+  Printer operator<<(Value& v){
+    if (v.kind == Value::intV)  { os << v.ival; }
+    if (v.kind == Value::boolV) { os << v.bval; }
+    if (v.kind == Value::floatV){ os << v.fval; }
+    return *this;
   }
 
 
+    
   ostream& os;
   int indent;
 };

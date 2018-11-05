@@ -67,6 +67,21 @@ void print(Printer& p, Stmt* s){
     return;
   }
 
+
+  if (s->kind == Stmt::blockS){
+    BlockS* bks = static_cast<BlockS*>(s);
+
+    p << "{";
+    for ( auto s : bks->stmtvector ){
+      print(p, s);
+      p.NextLine();
+    }
+    p << "}";
+
+  }
+
+
+
       
   p << "Statement Printer;";
 }

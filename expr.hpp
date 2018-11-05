@@ -1,11 +1,13 @@
 #pragma once
 #include <string>
-#include "type.hpp"
+
 #include "value.hpp"
+#include "type.hpp"
+//#include "value.hpp"
 #include "decl.hpp"
 #include "printer.hpp"
 
-
+//struct Value;
 struct Decl;
 // This is a minimalist expression implementation
 // There are some missing safty features, but the
@@ -103,10 +105,7 @@ struct BinaryE : Expr{
 
 // Literals are nullary
 struct LiteralE : Expr{
-  LiteralE(Kind k, Type* t, Value& val)
-    : Expr(k, t), val(val)
-  { }
-
+  LiteralE(Kind k, Type* t, Value& val);
   Value val;
 };
 
@@ -124,6 +123,8 @@ struct IntE : LiteralE{
 
 };
 
+
+//IDentifyer Expression
 struct IDE : Expr
 {
   // Construct d:
@@ -137,17 +138,3 @@ struct IDE : Expr
 void print(Printer& p, Expr* e);
 void print_sexpr(Printer& p, Expr* e);
 
-// NO IDENTIFYERS YET!
-/*
-struct IdentifierE : Expr{
-  IdentifierE(string s, RefT loc)
-    : Expr( name(s), ref(loc)
-  { }
-
-  Type* check() override{
-    return ref.what_ref_type();
-  }
-
-  string name;
-  RefT ref;
-};*/

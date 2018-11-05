@@ -15,11 +15,21 @@ add_executable(exprtest exprtest.cpp
                         printer.cpp)
 
 add_executable(stmttest stmttest.cpp
+                        value.cpp
                         stmt.cpp
                         expr.cpp
                         type.cpp
-                        value.cpp
                         printer.cpp)
+
+add_executable(decltest decl.test.cpp
+
+                        value.cpp
+                        decl.cpp
+                        type.cpp
+                        stmt.cpp
+                        expr.cpp
+                        printer.cpp
+                        )
 
 
                       #add_executable(decltest decltest.cpp

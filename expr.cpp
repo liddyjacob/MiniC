@@ -1,4 +1,9 @@
 #include "expr.hpp"
+#include "value.hpp"
+ 
+LiteralE::LiteralE(Kind k, Type* t, Value& val)
+  : Expr(k, t), val(val)
+{ }
 
 // Print an expression!
 void print(Printer& p, Expr* e){

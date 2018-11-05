@@ -1,13 +1,14 @@
 #pragma once
-#include "printer.hpp"
+//#include "printer.hpp"
+
+class Printer;
+
 class Value
 {
 public:
   explicit Value(int n);
   explicit Value(bool b);
   explicit Value(float f);
- 
-  friend Printer& operator<<(Printer& p, const Value& v);
 
   int get_int() const;
   double get_float() const;
@@ -19,15 +20,12 @@ public:
     floatV,
   };
 
-private:
-  //Current Lazy implementation does not use discriminated union (but should)
+  Kind kind;
+
   int ival;
   float fval;
   bool bval;
-  Kind kind;
 };
-
-
 
 inline 
 Value::Value(int n)

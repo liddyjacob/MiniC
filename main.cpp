@@ -7,14 +7,16 @@
 int main(){
   std::cout << "Hello, \n";
 
+  Printer p(std::cout);
+
   Type* tptr = new BoolT();
   Type* rptr = new RefT(tptr);
   Type* iptr = new IntT;
-  print(std::cout, tptr);
-  print(std::cout, rptr);
+  print(p, tptr);
+  print(p, rptr);
 
 
-  Printer p(std::cout);
+  //Printer p(std::cout);
   Value v(7);
   Expr* test = new IntE(iptr,v);
   std::cout << " was the result of print\n";
