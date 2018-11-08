@@ -1,57 +1,60 @@
 #pragma once
 #include <iostream>
+#include <vector>
 #include "printer.hpp"
 
+using std::vector;
 class Type;
-class BoolT;
-class IntT;
-class RefT;
+class BoolT;// Booleans
+class IntT;//  Integers
+class RefT;//  References
+class FunT;//  Functions
+
 class Printer;
-
-class Visitor
-{
-public:
-  virtual void visit(Type* t) { }
-  virtual void visit(BoolT* t) { return visit((Type*)t); }
-  virtual void visit(IntT* t) { return visit((Type*)t); }
-  virtual void visit(RefT* t) { return visit((Type*)t); }
-};
-
 
 struct Type
 {
-  virtual void accept(Visitor& v) = 0;
-  
+  enum Kind{
+    boolT,
+    intT,
+    funT,
+    refT
+  };
 
-};
-
-struct BoolT : public Type{
-  void accept(Visitor& v) override{
-    return v.visit(this);
-  }
-};
-
-struct IntT : public Type{
-  void accept(Visitor& v) override{
-    return v.visit(this);
-  }
-};
-
-struct RefT : public Type
-{
-  RefT(Type* t)
-    : refT(t)
+  Type(Kind k)
+    : kind(k)
   { }
-  void accept(Visitor& v) override{
-    return v.visit(this);
-  }
 
-  Type* what_ref_type() { return refT; } 
-
-private:
-  Type* refT;
+  Kind kind;
 };
 
-void print(Printer& os, Type* t);
+struct BoolT : Type{
+  BoolT()
+    : Type(boolT)
+  { }
+};
 
-//bool operator==(Type* t1, Type* t2) { return equal(t1, t2); }
+struct IntT : Type{
+  IntT()
+    : Type(intT)
+  { }
+};
+
+struct FunT : Type{
+  FunT(vector<Type*> in_t, Type* ret_t)
+    : Type(funT), vectorT(in_t), returnT(ret_t)
+  { }
+
+  vector<Type*> vectorT;
+  Type* returnT;
+};
+
+struct RefT : Type{
+  RefT(Type* t)
+    : Type(refT), reftype(t)
+  { }
+
+  Type* reftype;
+};
+
+
