@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <cstddef>
 
 #include "value.hpp"
 #include "type.hpp"
@@ -24,6 +25,7 @@ struct Expr{
   // Kind of expression.
   enum Kind
   {
+    UNDEFINED,
     boolL,
     intL,
     floatL,
@@ -49,17 +51,24 @@ struct Expr{
     ge, 
     eq, 
     neq, // End of Binary Kinds
+  
+    fn_call, // end of K-ary
   };
 
   // Will be helpful for subcases. i.e, if e.k <= Expr::nulEND
   // then we know e is a nullary expression.
   enum KindArity{
-    BEGIN  = 0,
+    BEGIN   = 0,
     nullEND = idL,
-    unEND  = negate,
-    binEND = neq,
-    END    = neq,
+    unEND   = negate,
+    binEND  = neq,
+    kEND    = fn_call,
+    END     = fn_call,
   };
+
+  virtual Expr* operator[](int i){
+      return nullptr;
+  }
 
   Expr(Kind k, Type* t);
 
@@ -88,7 +97,11 @@ struct UnaryE : Expr{
   UnaryE(Kind k, Type* t, Expr* e)
     : Expr(k,t), expr(e)
   { }
-
+  
+  virtual Expr* operator[](int i){
+    if (i == 0) return expr;
+    return nullptr;
+  }
   //Type* check() override;
   Expr* expr;
 };
@@ -98,9 +111,24 @@ struct BinaryE : Expr{
     : Expr(k,t), expr1(e1), expr2(e2)
   { }
 
+  virtual Expr* operator[](int i){
+    if (i == 0) return expr1;
+    if (i == 1) return expr2;
+    return nullptr;
+  }
   //Type* check() override;
   Expr* expr1;
   Expr* expr2;
+};
+
+// Not sure how do deal with funtions yet.
+struct KaryE : Expr{
+
+  KaryE(Kind k, Type* t, std::initializer_list<Expr*> list)
+    : Expr(k, t)
+  { }
+
+
 };
 
 // Literals are nullary

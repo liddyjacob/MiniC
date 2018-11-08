@@ -31,6 +31,15 @@ add_executable(decltest decl.test.cpp
                         printer.cpp
                         )
 
+add_executable(rulestest expr_rules.test.cpp
+
+                       value.cpp
+                       decl.cpp
+                       type.cpp
+                       stmt.cpp
+                       expr.cpp
+                       printer.cpp
+                       )
 
                       #add_executable(decltest decltest.cpp
                       # decl.cpp
