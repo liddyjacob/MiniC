@@ -32,7 +32,7 @@ add_executable(decltest decl.test.cpp
                         )
 
 add_executable(rulestest expr_rules.test.cpp
-
+                       expr_rules.cpp
                        value.cpp
                        decl.cpp
                        type.cpp

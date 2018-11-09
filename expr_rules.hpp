@@ -1,4 +1,5 @@
 #pragma once
+
 // This is the set of rules that help define
 // the expression language.
 //
@@ -22,6 +23,9 @@
 #include <vector>
 #include <unordered_map>
 #include <tuple>
+
+
+bool is_well_formed(Expr* e);
 
 using std::tuple;
 using std::get;
@@ -51,12 +55,18 @@ struct Rules{
     : RST_rules(RST_rules), RET_rules(RET_rules), RNV_rules(RNV_rules)
   { }
   
+  Rules()
+    : RST_rules(), RET_rules(), RNV_rules()
+  { }
+
+
   vector<RST> RST_rules; // {R1 or R2 or R3...}
   //   AND
   vector<RET> RET_rules; // {R1 or R2 or R3...}
   //   AND
   vector<RNV> RNV_rules; // {R1 and R2 and R3...}
 
+  // Adding rules is just combining the sets
   Rules operator+(Rules left){
   
     vRST newRST = RST_rules;
@@ -73,13 +83,19 @@ struct Rules{
 
 };
 
+
+// Requires listed arguments to be of a specific type.
 struct Require_Specific_Type{
   
   Require_Specific_Type(int a, Type::Kind k)
-    : argN(a), kind(k)
+    : arg_vect({a}), kind(k)
   { }
 
-  int argN; // Argument number
+  Require_Specific_Type(std::initializer_list<int> list, Type::Kind k)
+    : arg_vect(list), kind(k)
+  { }
+
+  vector<int> arg_vect; // Argument number
   Type::Kind kind;
 };
 
@@ -101,6 +117,7 @@ struct Require_Not_Value{
 
 };
 
+
 struct EnumHash
 {
       template <typename T>
@@ -111,47 +128,14 @@ struct EnumHash
 };
 
 
-const RET_0_1 = Rules{{ },{RET({0, 1})},{}}; 
-const INT_0_1 = Rules{ {RST(0, Type::intT), RST(1, Type::intT)}, { }, { } } 
-const BOOL_0_1 = Rules{ {RST(0, Type::boolT), RST(1, Type::boolT)}, { }, { } } 
+const Rules RET_0_1 = Rules{{ },{RET({0, 1})},{}}; 
+const Rules INT_0_1 = Rules{ {RST({0, 1}, Type::intT)}, { }, { } }; 
+const Rules BOOL_0_1 = Rules{ {RST({0, 1}, Type::boolT)}, { }, { } }; 
+ 
 
-std::unordered_map<Expr::Kind, Rules, EnumHash> expr_rules 
-  {
+bool pass_rst(Expr* e, RST rst_rule);
+bool pass_ret(Expr* e, RET ret_rule);
+bool pass_rnv(Expr* e, RNV rnv_rule);
 
-    // ST: specific type
-    // ET: Equivalent types
-    // NV: Not value
-    //                      RST  RET  RNV  
-    {Expr::UNDEFINED, Rules({ }, { }, { })},
-    {Expr::boolL,     Rules({ }, { }, { })},
-    {Expr::intL,      Rules({ }, { }, { })},
-    {Expr::floatL,    Rules({ }, { }, { })},
-    {Expr::idL,       Rules({ }, { }, { })},
-    {Expr::addinv,    Rules({ }, { }, { })},
-    {Expr::mulinv,    Rules({ }, { }, { })},
-    {Expr::negate,    Rules({RST(0, Type::boolT)}, { }, { })}, // Argument
-                                                     // one must be bool
-
-    {Expr::assign,    RET_0_1}, // argument 0,1 
-                                                     // must be same type
-    // Must be equal types: floats or ints: TODO fix after floats implemented
-    {Expr::add,       RET_0_1 + INT_0_1},
-
-
-    {Expr::sub,/*---*/RET_0_1 + INT_0_1},
-    {Expr::mul,       RET_0_1 + INT_0_1},
-    {Expr::quo,/*---*/RET_0_1 + INT_0_1}, // FIXME Requires nonzero den.
-    {Expr::rem,       RET_0_1 + INT_0_1}, // ints only!
-    {Expr::andE,      RET_0_1 + BOOL_0_1},
-    {Expr::orE,       RET_0_1 + BOOL_0_1},
-    {Expr::lt,        RET_0_1 + INT_0_1},
-    {Expr::le,        RET_0_1 + INT_0_1},
-    {Expr::gt,        RET_0_1 + INT_0_1},
-    {Expr::ge,        RET_0_1 + INT_0_1},
-    {Expr::eq,        RET_0_1}, // any type
-    {Expr::neq,       RET_0_1}, // any type
-    {Expr::fn_call, Rules({ }, { }, { })}, // no rules!
-  };
-
-//struct 
-
+extern const
+std::unordered_map<Expr::Kind, Rules, EnumHash> expr_rules;

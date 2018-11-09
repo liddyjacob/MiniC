@@ -70,6 +70,10 @@ struct Expr{
       return nullptr;
   }
 
+  virtual Expr* operator[](int i) const{
+    return nullptr;
+  }
+
   Expr(Kind k, Type* t);
 
   //virtual Type* check() = 0;
@@ -98,7 +102,7 @@ struct UnaryE : Expr{
     : Expr(k,t), expr(e)
   { }
   
-  virtual Expr* operator[](int i){
+  Expr* operator[](int i) override{
     if (i == 0) return expr;
     return nullptr;
   }
@@ -111,7 +115,7 @@ struct BinaryE : Expr{
     : Expr(k,t), expr1(e1), expr2(e2)
   { }
 
-  virtual Expr* operator[](int i){
+  Expr* operator[](int i) override{
     if (i == 0) return expr1;
     if (i == 1) return expr2;
     return nullptr;

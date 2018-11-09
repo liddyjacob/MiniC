@@ -1,6 +1,4 @@
 #include <expr.hpp>
-#include <expr.cpp>
-
 // Type check a single expression
 /*  e : The expression to be checked
  *  bad_path: The expressions leading to the error
