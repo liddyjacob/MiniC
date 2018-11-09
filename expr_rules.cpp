@@ -9,35 +9,37 @@ using std::cerr;
 
 // This function checks if an expression is well formed,
 // but does not check if the children are well formed.
-bool is_well_formed(Expr* e){
+// 
+// Returns the broken rules!
+Rules broken_rules(Expr* e){
 
   Rules rules = expr_rules.at(e->kind);
-  
-  bool found_pass = true;
+  Rules broken_rules;
 
+  bool found_pass = true;
   for (RST rst_rule : rules.RST_rules){
     if (pass_rst(e, rst_rule)){
       found_pass = true;
       break;
     } else {
+      broken_rules = broken_rules + Rules({rst_rule},{ },{ });
       found_pass = false;
     }
   }
-  if (! found_pass ) {return false;}
 
   for (RET ret_rule : rules.RET_rules){
     if (!pass_ret(e, ret_rule)){
-      return false;
+      broken_rules = broken_rules + Rules({ },{ret_rule},{ });
     }
   }
 
   for (RNV rnv_rule : rules.RNV_rules){
     if (!pass_rnv(e, rnv_rule)){
-      return false;
+      broken_rules = broken_rules + Rules({ },{ },{rnv_rule});
     }
   }
 
-  return true;  
+  return broken_rules;  
 }
   
 
@@ -87,6 +89,21 @@ bool pass_rnv(Expr* e, RNV rnv_rule){
 
 }
 
+
+Rules 
+Rules::operator+(Rules left){
+
+  vRST newRST = RST_rules;
+  newRST.insert(newRST.end(),left.RST_rules.begin(), left.RST_rules.end());
+
+  vRET newRET = RET_rules;
+  newRET.insert(newRET.end(),left.RET_rules.begin(), left.RET_rules.end());
+
+  vRNV newRNV = RNV_rules;
+  newRNV.insert(newRNV.end(),left.RNV_rules.begin(), left.RNV_rules.end());
+
+  return Rules(newRST, newRET, newRNV);
+}
 
 const Rules RET_0_1 = Rules{{ },{RET({0, 1})},{}}; 
 const Rules INT_0_1 = Rules{ {RST({0, 1}, Type::intT)}, { }, { } }; 

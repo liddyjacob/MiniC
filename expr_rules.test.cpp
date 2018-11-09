@@ -23,6 +23,7 @@ int main(){
   Expr* boolexpr1 = new BoolE(boolT, trueval);
   Expr* boolexpr2 = new BoolE(boolT, trueval);
   Expr* boolexpr3 = new BoolE(boolT, falseval);
+  
   // I dont understand why I manually enter the type here.
   Expr* leqexpr = new BinaryE(Expr::le, boolT, intexpr1, intexpr2);
   /// This is equivalent to the following code:
@@ -34,14 +35,10 @@ int main(){
 
   Expr* not_well_formed = new BinaryE(Expr::eq, boolT, boolexpr1, addexpr);
 
-  assert(is_well_formed(boolexpr1));
-  assert(is_well_formed(eqexpr1));
-  assert(is_well_formed(addexpr));
-  assert(!is_well_formed(not_well_formed));
+  assert(broken_rules(boolexpr1).is_empty() );
+  assert(broken_rules(eqexpr1).is_empty()   );
+  assert(broken_rules(addexpr).is_empty()   );
+  assert(!broken_rules(not_well_formed).is_empty()     );
 
-
-
-
-  std::cout << "Rules compilers\n";
   return 0;
 }
