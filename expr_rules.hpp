@@ -127,12 +127,6 @@ struct EnumHash
       }
 };
 
-
-const Rules RET_0_1 = Rules{{ },{RET({0, 1})},{}}; 
-const Rules INT_0_1 = Rules{ {RST({0, 1}, Type::intT)}, { }, { } }; 
-const Rules BOOL_0_1 = Rules{ {RST({0, 1}, Type::boolT)}, { }, { } }; 
- 
-
 bool pass_rst(Expr* e, RST rst_rule);
 bool pass_ret(Expr* e, RET ret_rule);
 bool pass_rnv(Expr* e, RNV rnv_rule);

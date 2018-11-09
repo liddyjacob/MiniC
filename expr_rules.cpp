@@ -12,12 +12,15 @@ using std::cerr;
 bool is_well_formed(Expr* e){
 
   Rules rules = expr_rules.at(e->kind);
+  
+  bool found_pass = true;
 
-  bool found_pass = false;
   for (RST rst_rule : rules.RST_rules){
     if (pass_rst(e, rst_rule)){
       found_pass = true;
       break;
+    } else {
+      found_pass = false;
     }
   }
   if (! found_pass ) {return false;}
@@ -34,7 +37,7 @@ bool is_well_formed(Expr* e){
     }
   }
 
-  
+  return true;  
 }
   
 
@@ -73,6 +76,7 @@ bool pass_ret(Expr* e, RET ret_rule){
       }
   
   }
+  return true;
 
 }
 
@@ -82,6 +86,11 @@ bool pass_rnv(Expr* e, RNV rnv_rule){
   return true;
 
 }
+
+
+const Rules RET_0_1 = Rules{{ },{RET({0, 1})},{}}; 
+const Rules INT_0_1 = Rules{ {RST({0, 1}, Type::intT)}, { }, { } }; 
+const Rules BOOL_0_1 = Rules{ {RST({0, 1}, Type::boolT)}, { }, { } };  
 
 const
 std::unordered_map<Expr::Kind, Rules, EnumHash> expr_rules 
@@ -95,8 +104,7 @@ std::unordered_map<Expr::Kind, Rules, EnumHash> expr_rules
     {Expr::boolL,     Rules({ }, { }, { })},
     {Expr::intL,      Rules({ }, { }, { })},
     {Expr::floatL,    Rules({ }, { }, { })},
-    {Expr::idL,       Rules({ }, { }, { })},
-     
+    {Expr::idL,       Rules({ }, { }, { })}, 
     
     {Expr::addinv,    Rules({ }, { }, { })},
     {Expr::mulinv,    Rules({ }, { }, { })},
