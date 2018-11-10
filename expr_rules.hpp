@@ -28,6 +28,7 @@
 class Rules;
 Rules broken_rules(Expr* e);
 
+using std::vector;
 using std::tuple;
 using std::get;
 
@@ -126,9 +127,9 @@ struct EnumHash
       }
 };
 
-bool pass_rst(Expr* e, RST rst_rule);
-bool pass_ret(Expr* e, RET ret_rule);
-bool pass_rnv(Expr* e, RNV rnv_rule);
+bool pass_rst(vector<Expr*> e_vect, RST rst_rule);
+bool pass_ret(vector<Expr*> e_vect, RET ret_rule);
+bool pass_rnv(vector<Expr*> e_vect, RNV rnv_rule);
 
 extern const
 std::unordered_map<Expr::Kind, Rules, EnumHash> EXPR_RULES;

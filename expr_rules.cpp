@@ -6,6 +6,7 @@
 
 using std::cout;
 using std::cerr;
+using std::vector;
 
 // This function checks if an expression is well formed,
 // but does not check if the children are well formed.
@@ -18,7 +19,7 @@ Rules broken_rules(Expr* e){
 
   bool found_pass = true;
   for (RST rst_rule : rules.RST_rules){
-    if (pass_rst(e, rst_rule)){
+    if (pass_rst(e->children(), rst_rule)){
       found_pass = true;
       break;
     } else {
@@ -31,13 +32,13 @@ Rules broken_rules(Expr* e){
   if (found_pass != true){ broken_rules.RST_rules.clear(); }
 
   for (RET ret_rule : rules.RET_rules){
-    if (!pass_ret(e, ret_rule)){
+    if (!pass_ret(e->children(), ret_rule)){
       broken_rules = broken_rules + Rules({ },{ret_rule},{ });
     }
   }
 
   for (RNV rnv_rule : rules.RNV_rules){
-    if (!pass_rnv(e, rnv_rule)){
+    if (!pass_rnv(e->children(), rnv_rule)){
       broken_rules = broken_rules + Rules({ },{ },{rnv_rule});
     }
   }
@@ -46,15 +47,15 @@ Rules broken_rules(Expr* e){
 }
   
 
-bool pass_rst(Expr* e, RST rst_rule){
+bool pass_rst(vector<Expr*> e_vect, RST rst_rule){
 
     for (int arg_i : rst_rule.arg_vect){
-      if (! (*e)[arg_i]) {
+      if ( arg_i > e_vect.size()) {
         cerr << "CRITICAL ERROR: RULE REQUIRES MORE ARGUMENTS\n";
         abort();
       }
 
-      if ((*e)[arg_i]->t->kind != rst_rule.kind){
+      if (e_vect[arg_i]->t->kind != rst_rule.kind){
         return false;
       }
   }
@@ -62,7 +63,7 @@ bool pass_rst(Expr* e, RST rst_rule){
   return true;
 }
 
-bool pass_ret(Expr* e, RET ret_rule){
+bool pass_ret(vector<Expr*> e_vect, RET ret_rule){
 
   for (int i = 0; i < ret_rule.arg_vect.size(); ++i){
       
@@ -70,13 +71,14 @@ bool pass_ret(Expr* e, RET ret_rule){
       
       int arg_i = ret_rule.arg_vect[i];
       int arg_j = ret_rule.arg_vect[j];
-      
-      if ( (!(*e)[arg_i]) || (!(*e)[arg_j]) ){  
+      int size = e_vect.size(); 
+
+      if ( (arg_i >= size) || (arg_j >= size) ){  
         cerr << "CRITICAL ERROR: RULE REQUIRES MORE ARGUMENTS\n";
         abort();
       }
       
-      if ((*e)[arg_i]->t->kind != (*e)[arg_j]->t->kind){
+      if (e_vect[arg_i]->t->kind != e_vect[arg_j]->t->kind){
         return false;
       }
   
@@ -85,7 +87,7 @@ bool pass_ret(Expr* e, RET ret_rule){
 
 }
 
-bool pass_rnv(Expr* e, RNV rnv_rule){
+bool pass_rnv(vector<Expr*> e, RNV rnv_rule){
 
   cerr << "pass_rnv not impelented, continuing anyway...\n";
   return true;
