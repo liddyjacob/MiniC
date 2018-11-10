@@ -20,11 +20,21 @@ namespace std
 
 // Int, float, bool
 extern const
-std::unordered_set<Type::Kind> group_types;
+std::unordered_set<Type::Kind> SUBGROUP_TYPES;
+
+// Order is important for conversion.
+extern const
+std::vector<Type::Kind> SUBGROUP_ORDER;
 
 // Int, float
 extern const
-std::unordered_set<Type::Kind> ring_types;
+std::unordered_set<Type::Kind> SUBRING_TYPES;
+
+extern const
+std::vector<Type::Kind> SUBRING_ORDER;
+
+
+
 
 // extern const
 // std::unordered_set<Type::Kind> ;

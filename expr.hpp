@@ -132,7 +132,6 @@ struct KaryE : Expr{
     : Expr(k, t)
   { }
 
-
 };
 
 // Literals are nullary

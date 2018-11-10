@@ -13,7 +13,7 @@ using std::cerr;
 // Returns the broken rules!
 Rules broken_rules(Expr* e){
 
-  Rules rules = expr_rules.at(e->kind);
+  Rules rules = EXPR_RULES.at(e->kind);
   Rules broken_rules;
 
   bool found_pass = true;
@@ -26,6 +26,9 @@ Rules broken_rules(Expr* e){
       found_pass = false;
     }
   }
+
+  // Just need to pass one of these rules.
+  if (found_pass != true){ broken_rules.RST_rules.clear(); }
 
   for (RET ret_rule : rules.RET_rules){
     if (!pass_ret(e, ret_rule)){
@@ -91,7 +94,7 @@ bool pass_rnv(Expr* e, RNV rnv_rule){
 
 
 Rules 
-Rules::operator+(Rules left){
+Rules::operator+(Rules const left) const{
 
   vRST newRST = RST_rules;
   newRST.insert(newRST.end(),left.RST_rules.begin(), left.RST_rules.end());
@@ -105,43 +108,53 @@ Rules::operator+(Rules left){
   return Rules(newRST, newRET, newRNV);
 }
 
-const Rules RET_0_1 = Rules{{ },{RET({0, 1})},{}}; 
+
+
+const Rules INT_0 = Rules{ {RST({0}, Type::intT)}, { }, { } }; 
+const Rules FLOAT_0 = Rules{ {RST({0}, Type::floatT)}, { }, { } };
 const Rules INT_0_1 = Rules{ {RST({0, 1}, Type::intT)}, { }, { } }; 
 const Rules BOOL_0_1 = Rules{ {RST({0, 1}, Type::boolT)}, { }, { } };  
+const Rules FLOAT_0_1 = Rules{ {RST({0, 1}, Type::floatT)}, { }, { } };
+
+const Rules RET_0_1 = Rules{{ },{RET({0, 1})},{}}; 
+
+// Require nonzero value
+// const Rules NONZERO = Rules{ { }, { }, {RNV(Value_type(Value_type::zero))}};
+
+const Rules NO_RULES = Rules({ }, { }, { });
 
 const
-std::unordered_map<Expr::Kind, Rules, EnumHash> expr_rules 
+std::unordered_map<Expr::Kind, Rules, EnumHash> EXPR_RULES 
   {
 
     // ST: specific type
     // ET: Equivalent types
     // NV: Not value
-    //                      RST  RET  RNV
-    {Expr::UNDEFINED, Rules({ }, { }, { })},
-    {Expr::boolL,     Rules({ }, { }, { })},
-    {Expr::intL,      Rules({ }, { }, { })},
-    {Expr::floatL,    Rules({ }, { }, { })},
-    {Expr::idL,       Rules({ }, { }, { })}, 
+    //                      
+    {Expr::UNDEFINED, NO_RULES},
+    {Expr::boolL,     NO_RULES},
+    {Expr::intL,      NO_RULES},
+    {Expr::floatL,    NO_RULES},
+    {Expr::idL,       NO_RULES}, 
     
-    {Expr::addinv,    Rules({ }, { }, { })},
-    {Expr::mulinv,    Rules({ }, { }, { })},
+    {Expr::addinv,    INT_0 + FLOAT_0}, // TODO
+    {Expr::mulinv,    INT_0 + FLOAT_0},
     {Expr::negate,    Rules({RST(0, Type::boolT)}, { }, { })},
-    {Expr::assign,    RET_0_1}, // argument 0,1 
-                                                     // must be same type
-    // Must be equal types: floats or ints: TODO fix after floats implemented
-    {Expr::add,       INT_0_1},
-    {Expr::sub,/*---*/INT_0_1},
-    {Expr::mul,       INT_0_1},
-    {Expr::quo,/*---*/INT_0_1}, // FIXME Requires nonzero den.
+    {Expr::assign,    RET_0_1}, //FIXME check if left is `assignable`
+    
+    {Expr::add,       INT_0_1 + FLOAT_0_1},
+    {Expr::sub,/*---*/INT_0_1 + FLOAT_0_1},
+    {Expr::mul,       INT_0_1 + FLOAT_0_1},
+    {Expr::quo,/*---*/INT_0_1 + FLOAT_0_1}, // FIXME Requires nonzero den.
     {Expr::rem,       INT_0_1}, // ints only!
 
     {Expr::andE,      BOOL_0_1},
     {Expr::orE,       BOOL_0_1},
 
-    {Expr::lt,        INT_0_1},
-    {Expr::le,        INT_0_1},
-    {Expr::gt,        INT_0_1},
-    {Expr::ge,        INT_0_1},
+    {Expr::lt,        INT_0_1 + FLOAT_0_1},
+    {Expr::le,        INT_0_1 + FLOAT_0_1},
+    {Expr::gt,        INT_0_1 + FLOAT_0_1},
+    {Expr::ge,        INT_0_1 + FLOAT_0_1},
 
     {Expr::eq,        RET_0_1}, // any type
     {Expr::neq,       RET_0_1}, // any type
@@ -167,7 +180,7 @@ std::unordered_map<Expr::Kind, Rules, EnumHash> expr_rules
   }
 
   if (e->kind <= Expr::kEND){
-    cerr << "is_well formed in expr_rules.cpp not implemented\n"
+    cerr << "is_well formed in EXPR_RULES.cpp not implemented\n"
          << "\tContinuing anyway...\n";
     return true;
   }
