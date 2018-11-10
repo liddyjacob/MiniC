@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <cstddef>
+#include <vector>
 
 #include "value.hpp"
 #include "type.hpp"
@@ -20,6 +21,9 @@ struct Decl;
 // sort of group theory thing would be
 // cool.
 
+
+
+
 using std::string;
 struct Expr{
   // Kind of expression.
@@ -32,6 +36,7 @@ struct Expr{
     idL, // End of nullary kinds
 
 
+    imp_conv,
     addinv,
     mulinv,
     negate, // End of Unary kinds
@@ -65,6 +70,11 @@ struct Expr{
     kEND    = fn_call,
     END     = fn_call,
   };
+
+  virtual std::vector<Expr*> children(){
+    return std::vector<Expr*>{};
+  }
+
 
   virtual Expr* operator[](int i){
       return nullptr;
@@ -102,10 +112,11 @@ struct UnaryE : Expr{
     : Expr(k,t), expr(e)
   { }
   
-  Expr* operator[](int i) override{
-    if (i == 0) return expr;
-    return nullptr;
+  std::vector<Expr*> children() override{
+    return std::vector<Expr*>{expr};
   }
+
+
   //Type* check() override;
   Expr* expr;
 };
@@ -115,11 +126,10 @@ struct BinaryE : Expr{
     : Expr(k,t), expr1(e1), expr2(e2)
   { }
 
-  Expr* operator[](int i) override{
-    if (i == 0) return expr1;
-    if (i == 1) return expr2;
-    return nullptr;
+  std::vector<Expr*> children() override{
+    return std::vector<Expr*>{expr1, expr2};
   }
+
   //Type* check() override;
   Expr* expr1;
   Expr* expr2;
@@ -129,9 +139,17 @@ struct BinaryE : Expr{
 struct KaryE : Expr{
 
   KaryE(Kind k, Type* t, std::initializer_list<Expr*> list)
-    : Expr(k, t)
+    : Expr(k, t), parameters(list)
   { }
 
+  std::vector<Expr*> children() override{
+    std::vector<Expr*> children{fn_IDE};
+    children.insert(children.end(), parameters.begin(), parameters.end());
+    return children;
+  }
+
+  Expr* fn_IDE;
+  std::vector<Expr*> parameters;
 };
 
 // Literals are nullary
@@ -150,6 +168,12 @@ struct BoolE : LiteralE{
 struct IntE : LiteralE{
   IntE(Type* t, Value& val)
     : LiteralE(intL, t, val)
+  { }
+};
+
+struct ImplicitConvE : UnaryE{
+  ImplicitConvE(Type* t, Expr* e)
+    : UnaryE(imp_conv, t, e)
   { }
 
 };

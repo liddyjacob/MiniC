@@ -47,7 +47,7 @@ using iRST = std::initializer_list<Require_Specific_Type>;
 using iRET = std::initializer_list<Require_Equiv_Type>;
 using iRNV = std::initializer_list<Require_Not_Value>;
 
-// This one feels more like a class to me.
+// This encompasses the set of rules an expression must follow
 class Rules{
 public:
 

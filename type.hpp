@@ -15,6 +15,7 @@ class Printer;
 struct Type
 {
   enum Kind{
+    UNDEFINED,
     boolT,
     intT,
     floatT,

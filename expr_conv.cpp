@@ -89,8 +89,12 @@ Type::Kind find_LCM(std::vector<Expr*> e_vect){
   return max;
 }
 
-bool convert(std::vector<Expr*> e_vect){
 
-  if (!is_convertable(e_vect)){ return false; }
+// Convert expressions based of the rules they break.
+// If conversion is not successful
+bool convert_children(Expr* e, Rules broken_rules){
+  
+  //if (!is_convertable(e_vect)){ return false; }
+  //if (broken_rules
   
 }
