@@ -17,8 +17,9 @@ struct Type
   enum Kind{
     boolT,
     intT,
+    floatT,
     funT,
-    refT
+    refT,
   };
 
   Type(Kind k)
@@ -37,6 +38,12 @@ struct BoolT : Type{
 struct IntT : Type{
   IntT()
     : Type(intT)
+  { }
+};
+
+struct FloatT : Type{
+  FloatT()
+    : Type(floatT)
   { }
 };
 
