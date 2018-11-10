@@ -70,14 +70,14 @@ public:
   vector<RNV> RNV_rules; // {R1 and R2 and R3...}
 
   // Adding rules is just combining the sets
-  Rules operator+(Rules left);
+  Rules operator+(Rules const left) const;
 
   bool is_empty(){
-    return (RST_rules.size()
+    return  RST_rules.size()
           + RET_rules.size()
           + RNV_rules.size()
           == 
-            0);
+            0;
   }
   
 };
@@ -131,4 +131,4 @@ bool pass_ret(Expr* e, RET ret_rule);
 bool pass_rnv(Expr* e, RNV rnv_rule);
 
 extern const
-std::unordered_map<Expr::Kind, Rules, EnumHash> expr_rules;
+std::unordered_map<Expr::Kind, Rules, EnumHash> EXPR_RULES;
