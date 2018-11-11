@@ -19,7 +19,7 @@ Rules broken_rules(Expr* e){
 
   bool found_pass = true;
   for (RST rst_rule : rules.RST_rules){
-    if (pass_rst(e->children(), rst_rule)){
+    if (pass_rst(e->children, rst_rule)){
       found_pass = true;
       break;
     } else {
@@ -32,13 +32,13 @@ Rules broken_rules(Expr* e){
   if (found_pass != true){ broken_rules.RST_rules.clear(); }
 
   for (RET ret_rule : rules.RET_rules){
-    if (!pass_ret(e->children(), ret_rule)){
+    if (!pass_ret(e->children, ret_rule)){
       broken_rules = broken_rules + Rules({ },{ret_rule},{ });
     }
   }
 
   for (RNV rnv_rule : rules.RNV_rules){
-    if (!pass_rnv(e->children(), rnv_rule)){
+    if (!pass_rnv(e->children, rnv_rule)){
       broken_rules = broken_rules + Rules({ },{ },{rnv_rule});
     }
   }

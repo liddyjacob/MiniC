@@ -71,11 +71,6 @@ struct Expr{
     END     = fn_call,
   };
 
-  virtual std::vector<Expr*> children(){
-    return std::vector<Expr*>{};
-  }
-
-
   virtual Expr* operator[](int i){
       return nullptr;
   }
@@ -84,18 +79,18 @@ struct Expr{
     return nullptr;
   }
 
-  Expr(Kind k, Type* t);
-
+  Expr(Kind k, Type* t, std::initializer_list<Expr*> list);
   //virtual Type* check() = 0;
   //virtual void print(std::ostream& os) const = 0;
 
+  std::vector<Expr*> children;
   Kind kind;
   Type* t;
 };
 
 inline
-Expr::Expr(Kind k, Type* t)
-  : kind(k), t(t)
+Expr::Expr(Kind k, Type* t, std::initializer_list<Expr*> list)
+  : kind(k), t(t), children(list)
 { 
   if ((BEGIN > kind) || (END < kind)){
     throw std::runtime_error ("Invalid Expression");
@@ -109,52 +104,49 @@ struct NullaryE : Expr{
 
 struct UnaryE : Expr{
   UnaryE(Kind k, Type* t, Expr* e)
-    : Expr(k,t), expr(e)
+    : Expr(k,t, {e})//, children({e})
   { }
   
-  std::vector<Expr*> children() override{
-    return std::vector<Expr*>{expr};
-  }
-
-
   //Type* check() override;
-  Expr* expr;
+  Expr*& expr(){return children[0];};
 };
 
 struct BinaryE : Expr{
   BinaryE(Kind k, Type* t, Expr* e1, Expr* e2)
-    : Expr(k,t), expr1(e1), expr2(e2)
+    : Expr(k,t,{e1, e2})
   { }
 
-  std::vector<Expr*> children() override{
-    return std::vector<Expr*>{expr1, expr2};
-  }
-
   //Type* check() override;
-  Expr* expr1;
-  Expr* expr2;
+  
+  Expr*& expr1(){return children[0];};
+  Expr*& expr2(){return children[1];}
 };
 
 // Not sure how do deal with funtions yet.
 struct KaryE : Expr{
 
   KaryE(Kind k, Type* t, std::initializer_list<Expr*> list)
-    : Expr(k, t), parameters(list)
+    : Expr(k, t, list)
   { }
 
-  std::vector<Expr*> children() override{
-    std::vector<Expr*> children{fn_IDE};
-    children.insert(children.end(), parameters.begin(), parameters.end());
-    return children;
-  }
+};
 
-  Expr* fn_IDE;
-  std::vector<Expr*> parameters;
+struct Fn_callE : KaryE{
+  Fn_callE(Type* t, std::initializer_list<Expr*> list)
+    : KaryE(fn_call, t, list)
+  { }
+
+
+  Expr*& fn_IDE(){return children[0];}
 };
 
 // Literals are nullary
 struct LiteralE : Expr{
-  LiteralE(Kind k, Type* t, Value& val);
+  LiteralE(Kind k, Type* t, Value& val)
+    : Expr(k, t, {}), val(val)
+  { }
+
+
   Value val;
 };
 
@@ -184,7 +176,7 @@ struct IDE : Expr
 {
   // Construct d:
   IDE(Type* t, Decl* d)
-    : Expr(idL, t), decl(d)
+    : Expr(idL, t, {}), decl(d)
   { }
 
   Decl* decl;

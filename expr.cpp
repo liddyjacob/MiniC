@@ -1,9 +1,6 @@
 #include "expr.hpp"
 #include "value.hpp"
  
-LiteralE::LiteralE(Kind k, Type* t, Value& val)
-  : Expr(k, t), val(val)
-{ }
 
 // Print an expression!
 void print(Printer& p, Expr* e){
@@ -38,7 +35,7 @@ void print(Printer& p, Expr* e){
         break;
     } 
 
-    print(p, static_cast<UnaryE*>(e)->expr);
+    print(p, static_cast<UnaryE*>(e)->expr());
     p << ")";
     return;
   }
@@ -51,7 +48,7 @@ void print(Printer& p, Expr* e){
     int indent = p.indent;
     p.indent = 0;
 
-    print(p, static_cast<BinaryE*>(e)->expr1);
+    print(p, static_cast<BinaryE*>(e)->expr1());
     
     switch (e->kind){
       case Expr::assign:
@@ -97,7 +94,7 @@ void print(Printer& p, Expr* e){
         p << " != ";
         break;
     }
-    print(p, static_cast<BinaryE*>(e)->expr2);
+    print(p, static_cast<BinaryE*>(e)->expr2());
     p << ")";
     p.indent = indent;
     return;
@@ -135,7 +132,7 @@ void print_sexpr(Printer& p, Expr* e){
         break;
     } 
     p << " ";
-    print_sexpr(p, static_cast<UnaryE*>(e)->expr);
+    print_sexpr(p, static_cast<UnaryE*>(e)->expr());
     p << ")";
     return;
   }
@@ -194,9 +191,9 @@ void print_sexpr(Printer& p, Expr* e){
     }
 
     p << " ";
-    print_sexpr(p, static_cast<BinaryE*>(e)->expr1);
+    print_sexpr(p, static_cast<BinaryE*>(e)->expr1());
     p << " ";
-    print_sexpr(p, static_cast<BinaryE*>(e)->expr2);
+    print_sexpr(p, static_cast<BinaryE*>(e)->expr2());
     p << ")";
     return;
   }
