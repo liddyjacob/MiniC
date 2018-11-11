@@ -91,9 +91,9 @@ struct Printer{
   }
 
   Printer operator<<(Value& v){
-    if (v.kind == Value::intV)  { os << v.ival; }
-    if (v.kind == Value::boolV) { os << v.bval; }
-    if (v.kind == Value::floatV){ os << v.fval; }
+    if (v.kind == Value::intV)  { *this << v.ival; }
+    if (v.kind == Value::boolV) { *this << v.bval; }
+    if (v.kind == Value::floatV){ *this << v.fval; }
     return *this;
   }
 

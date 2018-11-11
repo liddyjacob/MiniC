@@ -1,9 +1,13 @@
 #include "expr_rules.hpp"
+#include "expr_conv.hpp"
 #include "expr.hpp"
+#include "printer.hpp"
 #include <iostream>
 #include <cassert>
 
 int main(){
+  
+  Printer p(std::cout);
   // This seems like the right syntax.
   Type* boolT = new BoolT();
   Type* intT = new IntT();
@@ -34,10 +38,20 @@ int main(){
 
   Expr* not_well_formed = new BinaryE(Expr::eq, boolT, boolexpr1, addexpr);
 
-  assert(broken_rules(boolexpr1).is_empty() );
-  assert(broken_rules(eqexpr1).is_empty()   );
-  assert(broken_rules(addexpr).is_empty()   );
-  assert(!broken_rules(not_well_formed).is_empty()     );
+  std::cout << "ILL FORMED(but convertable) EXPRESSION:\n";
+  print(p, not_well_formed); std::cout << '\n';
+  assert(!broken_rules(not_well_formed).is_empty());
+  assert(is_convertable(not_well_formed->children()));
+
+  Rules broken = broken_rules(not_well_formed);
+  vector<Expr*> converted = not_well_formed->children();
+  convert(converted, broken);
+  
+  Expr* well_formed = new BinaryE(Expr::eq, boolT, converted[0], converted[1]);
+
+  std::cout << "\nCONVERTED EXPRESSION:\n";
+  print(p, well_formed); std::cout << '\n';
+  assert(broken_rules(well_formed).is_empty());  
 
   return 0;
 }

@@ -24,6 +24,9 @@ void print(Printer& p, Expr* e){
   if (e->kind <= Expr::unEND){
     // TODO Print out details for unary expresisons.
     switch (e->kind){
+      case Expr::imp_conv:
+        p << "_imp_conv<" << e->t  << ">" << "(";
+        break;
       case Expr::addinv:
         p << "-(";
         break;
