@@ -77,7 +77,7 @@ bool pass_ret(vector<Expr*> e_vect, RET ret_rule){
         cerr << "CRITICAL ERROR: RULE REQUIRES MORE ARGUMENTS\n";
         abort();
       }
-      
+     
       if (e_vect[arg_i]->t->kind != e_vect[arg_j]->t->kind){
         return false;
       }
@@ -93,7 +93,6 @@ bool pass_rnv(vector<Expr*> e, RNV rnv_rule){
   return true;
 
 }
-
 
 Rules 
 Rules::operator+(Rules const left) const{

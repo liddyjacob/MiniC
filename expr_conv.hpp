@@ -41,5 +41,4 @@ std::vector<Type::Kind> SUBRING_ORDER;
 bool is_convertable(std::vector<Expr*> e_vect);
 
 // convert to a supertype
-bool convert(std::vector<Expr*> e_vect);
-
+bool convert(std::vector<Expr*>& e_vect, Rules broken_rules);

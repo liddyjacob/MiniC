@@ -72,6 +72,14 @@ Type::Kind max_kind(Type::Kind t1, Type::Kind t2){
   return Type::UNDEFINED;
 }
 
+
+// t1 converts to t2
+bool converts_to(Type::Kind from, Type::Kind to){
+  if (max_kind(from, to) == to) return true;
+  return false;
+}
+
+
 // boolT < intT < floatT
 // funT -> fn_call -> return type
 // int -> refT? expr
@@ -92,8 +100,49 @@ Type::Kind find_LCM(std::vector<Expr*> e_vect){
 
 // Convert expressions based of the rules they break.
 // If conversion is not successful
-bool convert_children(Expr* e, Rules broken_rules){
+bool convert(std::vector<Expr*>& e_vect, Rules broken_rules){
+ 
+  for (RST rst_rule : broken_rules.RST_rules){
+    Type::Kind to = rst_rule.kind;
+    
+    for (int i : rst_rule.arg_vect){
+      Type::Kind from = e_vect[i]->t->kind;
+
+      // Big memory problem:
+      Type* toType = new Type(to);
+      
+      if (converts_to(from, to)){
+        Expr* conversion = new ImplicitConvE(toType, e_vect[i]);
+        e_vect[i] = conversion;
+      }
+      
+      else {
+        return false;
+      }
+    
+    }
+  }
   
+  for (RET rst_rule : broken_rules.RET_rules){
+    
+    std::vector<Expr*> subjects;
+    for (int i : rst_rule.arg_vect){
+      subjects.push_back(e_vect[i]);
+    }
+
+    Type::Kind lcm = find_LCM(subjects);
+    if (lcm == Type::UNDEFINED) { return false; }
+
+    Type* toType = new Type(lcm);
+
+    for (int i : rst_rule.arg_vect){
+      if (e_vect[i]->t->kind != lcm){
+        Expr* conversion = new ImplicitConvE(toType, e_vect[i]);
+        e_vect[i] = conversion;
+      }
+    }
+  }
+ 
   //if (!is_convertable(e_vect)){ return false; }
   //if (broken_rules
   
