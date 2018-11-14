@@ -71,7 +71,7 @@ struct Token
     arrow,
   };
 
-  static const Kind 
+  //static const Kind 
 
 };
 
