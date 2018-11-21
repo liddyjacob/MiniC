@@ -65,6 +65,11 @@ add_executable(typedtest expr_typing.test.cpp
                        )
 
 
+add_executable(lexertest lexer.test.cpp
+                         lexer.cpp
+                         #token.cpp
+                         )
+
                       #add_executable(decltest decltest.cpp
                       # decl.cpp
                       # stmt.cpp

@@ -6,21 +6,10 @@ struct Token;
 bool is_keyword(Token);
 bool is_logic(Token);
 
-
 struct Token
 {
-
-  Token(Kind k, std::string lexeme)
-    : kind(k), lex(lexeme)
-  { }
-
-
-  Kind kind;
-  std::string s;
   
-  /*** NO NEED TO LOOK FOR FURTHER FUNCTIONS:
-   *        BELOW IS JUST KIND ENUM          */
-    
+  
   enum Kind{
     bool_kw,
     int_kw,
@@ -72,7 +61,15 @@ struct Token
   };
 
   //static const Kind 
+  Token(Kind k, std::string lexeme)
+    : kind(k), lexeme(lexeme)
+  { }
 
+
+  explicit operator bool() const { return kind != eof; }
+  
+  Kind kind;
+  std::string lexeme; 
 };
 
 
