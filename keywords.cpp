@@ -1,23 +1,23 @@
-#include "keyword.hpp"
+#include "keywords.hpp"
 
 const
-std::unordered_map<std::string, Token::Name> keyword_map = 
+std::unordered_map<std::string, Token::Kind> keyword_map = 
 {
-  {"bool", bool_kw},
-  {"int", int_kw},
-  {"float", float_kw},
-  {"ref", ref_kw},
-  {"fun", fun_kw},
-  {"var", var_kw},
+  {"bool", Token::bool_kw},
+  {"int", Token::int_kw},
+  {"float", Token::float_kw},
+  {"ref", Token::ref_kw},
+  {"fun", Token::fun_kw},
+  {"var", Token::var_kw},
 
-  {"if", if_kw},
-  {"else", else_kw},
-  {"while", while_kw},
+  {"if", Token::if_kw},
+  {"else", Token::else_kw},
+  {"while", Token::while_kw},
   
-  {"return", return_kw},
-  {"continue", continue_kw},
-  {"break", break_kw},
-  {"and", and_kw}, 
-  {"or", or_kw},
-  {"not", not_kw} // End of keywords
+  {"return", Token::return_kw},
+  {"continue", Token::continue_kw},
+  {"break", Token::break_kw},
+  {"and", Token::and_kw}, 
+  {"or", Token::or_kw},
+  {"not", Token::not_kw} // End of keywords
 };

@@ -6,7 +6,7 @@ class Lexer{
 
 public:
   Lexer(char const* first, char const* limit)
-    : first(first), limit(limit)
+    : first(first), limit(limit), line_number(0)
   { }
 
   Lexer(std::string const& str)
@@ -14,17 +14,19 @@ public:
   { }
 
   Token parse_next();
+  char peek(int n = 0) const;
 
   int line_number;
-  
-  Token match(Token::Kind);
 
-  std::unordered_map<std::string, Token::Kind> keywords;
+  Token match(Token::Kind, int);
+  Token match_word();
+  Token match_number();
+  //std::unordered_map<std::string, Token::Kind> keywords;
 
 private:
 
-  bool is_eof(char const* ptr) const { return ptr == limit; }
-  //char* consume() { first++; return first; }
+  bool is_eof() const;
+  bool is_eof(const char* ptr) const;
 
   char const* first;
   char const* limit;

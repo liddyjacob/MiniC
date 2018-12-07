@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-
+#include <iostream>
 struct Token;
 
 bool is_keyword(Token);
@@ -58,6 +58,8 @@ struct Token
     // Other:
     colon, 
     arrow,
+    identifier,
+    integer_literal,
   };
 
   //static const Kind 
@@ -72,6 +74,4 @@ struct Token
   std::string lexeme; 
 };
 
-
-
-
+std::ostream& operator<<(std::ostream& os, Token const& tok);

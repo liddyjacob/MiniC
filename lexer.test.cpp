@@ -15,12 +15,13 @@ main(int argc, char* argv[])
   istreambuf_iterator<char> first(ifs);
   istreambuf_iterator<char> limit;
   string input(first, limit);
-
-
-
-
-  {
-    Lexer l(input);
+  
+  std::cout << "IN: " << input << '\n';
+  Lexer l(input);
+  
+  std::cout << "HI\n";
+  while (Token tok = l.parse_next()){
+    std::cout << "< " << tok << " >\n";
   }
 
 }

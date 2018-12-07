@@ -5,4 +5,4 @@
 #include <unordered_map>
 
 extern const
-std::unordered_map<std::string, Token::Name> keyword_map;
+std::unordered_map<std::string, Token::Kind> keyword_map;

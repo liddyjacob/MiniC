@@ -1,6 +1,20 @@
 set(CMAKE_CXX_FLAGS -std="c++14")
 
 project(miniC)
+add_library(libmc
+                       expr_rules.cpp
+                       expr_conv.cpp
+                       value.cpp
+                       decl.cpp
+                       type.cpp
+                       stmt.cpp
+                       expr.cpp
+                       printer.cpp
+                       lexer.cpp
+                       keywords.cpp
+                       token.cpp
+                       )
+
 add_executable(miniC main.cpp
                      type.cpp
                      value.cpp
@@ -66,9 +80,10 @@ add_executable(typedtest expr_typing.test.cpp
 
 
 add_executable(lexertest lexer.test.cpp
-                         lexer.cpp
+  #lexer.cpp
                          #token.cpp
                          )
+target_link_libraries(lexertest libmc)
 
                       #add_executable(decltest decltest.cpp
                       # decl.cpp
