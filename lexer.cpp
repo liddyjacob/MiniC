@@ -9,7 +9,7 @@ bool is_nondigit(char c){
 }
 
 Token
-Lexer::parse_next()
+Lexer::lex_next()
 {
   while (!is_eof()){
     switch (peek()){

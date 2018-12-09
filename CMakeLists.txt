@@ -13,6 +13,8 @@ add_library(libmc
                        lexer.cpp
                        keywords.cpp
                        token.cpp
+                       parser.cpp
+                       parser.expr.cpp
                        )
 
 add_executable(miniC main.cpp
@@ -84,6 +86,9 @@ add_executable(lexertest lexer.test.cpp
                          #token.cpp
                          )
 target_link_libraries(lexertest libmc)
+
+add_executable(parser parser.test.cpp)
+target_link_libraries(parser libmc)
 
                       #add_executable(decltest decltest.cpp
                       # decl.cpp

@@ -13,7 +13,12 @@ public:
     : Lexer(str.data(), str.data() + str.size())
   { }
 
-  Token parse_next();
+  Lexer(const Lexer& lhs)
+    : Lexer(lhs.first, lhs.limit)
+  { }
+
+  Token lex_next();
+
   char peek(int n = 0) const;
 
   int line_number;
@@ -22,6 +27,7 @@ public:
   Token match_word();
   Token match_number();
   //std::unordered_map<std::string, Token::Kind> keywords;
+  
 
 private:
 

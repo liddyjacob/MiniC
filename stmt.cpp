@@ -67,7 +67,6 @@ void print(Printer& p, Stmt* s){
     return;
   }
 
-
   if (s->kind == Stmt::blockS){
     BlockS* bks = static_cast<BlockS*>(s);
 
@@ -79,9 +78,6 @@ void print(Printer& p, Stmt* s){
     p << "}";
 
   }
-
-
-
       
   p << "Statement Printer;";
 }

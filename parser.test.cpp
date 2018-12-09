@@ -1,5 +1,5 @@
 #include "lexer.hpp"
-
+#include "parser.hpp"
 #include <iterator>
 #include <iostream>
 #include <fstream>
@@ -17,7 +17,8 @@ main(int argc, char* argv[])
   string input(first, limit);
   
   Lexer l(input);
-  while (Token t = l.lex_next()) {
-    std::cout << "< " <<  t << " >\n";
-  }
+
+  Parser p(l);
+  p.parse_expr(); 
+
 }
