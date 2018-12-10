@@ -2,7 +2,7 @@
 #include <cstdlib>
 
 Parser::Parser(Lexer l)
-  : lexer(l), index(0)
+  : lexer(l), index(0), scopeStack()
 { 
   while (Token t = lexer.lex_next())
     tokens.push_back(t);

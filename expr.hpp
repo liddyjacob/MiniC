@@ -37,12 +37,10 @@ struct Expr{
     floatL,
     idL, // End of nullary kinds
 
-
     imp_conv,
     addinv,
     mulinv,
     negate, // End of Unary kinds
-
 
     assign,
     add,

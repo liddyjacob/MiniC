@@ -23,7 +23,7 @@ main(int argc, char* argv[])
   Parser p(l);
 
   Printer printer(std::cout);
-  print(printer, p.parse_expr()); 
+  print(printer, p.parse_stmt()); 
   printer.NextLine();
 
 }

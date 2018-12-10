@@ -1,6 +1,7 @@
 #pragma once
 #include "expr.hpp"
 
+struct Decl;
 struct Expr;
 
 #include <array>
@@ -11,6 +12,7 @@ struct Stmt
 {
   enum Kind
   {
+    emptyS,
     breakS,
     continueS,
     declS,
@@ -42,7 +44,12 @@ struct BreakS : Stmt{
   BreakS()
     : Stmt(breakS)
   { }
+};
 
+struct EmptyS : Stmt{
+  EmptyS()
+    : Stmt(emptyS)
+  { }
 };
 
 struct ContinueS : Stmt{
@@ -71,11 +78,11 @@ struct ExprS : Stmt{
 
 // 
 struct DeclS : Stmt{
-  DeclS(Expr* e)
-    : Stmt(declS), expr(e)
+  DeclS(Decl* d)
+    : Stmt(declS), decl(d)
   { }
 
-  Expr* expr;
+  Decl* decl;
 };
 
 struct UnaryS : Stmt{
@@ -120,6 +127,10 @@ struct KaryS : Stmt{
     : Stmt(k), stmtvector(args)
   { }
 
+  KaryS(Kind k, std::vector<Stmt*> args)
+    : Stmt(k), stmtvector(args)
+  { }
+
   std::vector<Stmt*> stmtvector;
 };
 
@@ -129,6 +140,10 @@ struct BlockS : KaryS{
   { 
   }
 
+  BlockS(std::vector<Stmt*> vect)
+    : KaryS(blockS, vect)
+  { 
+  }
 };
 
   

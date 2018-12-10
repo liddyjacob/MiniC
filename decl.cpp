@@ -41,3 +41,21 @@ void print(Printer& p, Decl* d){
   } 
   
 }
+
+std::vector<Type*> 
+FunctionD::get_return_types(){
+  std::vector<Type*> param_types;
+  for (Decl* d : params){
+    Type* t = nullptr;
+    if (d->kind == Decl::objectD) 
+      { t = static_cast<ObjectD*>(d)->type; }
+    if (d->kind == Decl::referenceD) 
+      { t = static_cast<ReferenceD*>(d)->reftype; }
+    if (d->kind == Decl::functionD) 
+      { t = new FunT(static_cast<FunctionD*>(d)->get_return_types(),
+                     static_cast<FunctionD*>(d)->returntype);
+      }
+    param_types.push_back(t);
+  }
+  return param_types;
+}

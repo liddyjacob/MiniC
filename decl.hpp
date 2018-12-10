@@ -59,6 +59,8 @@ struct FunctionD : Decl{
     : Decl(n, functionD), returntype(t), params(parms), body(s)
   { }
 
+  std::vector<Type*> get_return_types();
+
   Type* returntype;
   std::vector<Decl*> params;
   Stmt* body;

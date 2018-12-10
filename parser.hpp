@@ -4,6 +4,7 @@
 #include "decl.hpp"
 #include "type.hpp"
 #include "lexer.hpp"
+#include "scope.hpp"
 
 // The parser conducts proofs that 
 // a string follows the grammer of 
@@ -50,7 +51,8 @@ public:
   bool verbose;
   
   Expr* parse_expr(ExprType et = ExprType::assignET);
-  Stmt* parse_stmt(StmtType st = StmtType::exprST);
+  Stmt* parse_stmt();
+  Stmt* parse_stmt(StmtType st);
   Decl* parse_decl(DeclType dt = DeclType::programDT);
   Token match(Token::Kind k);
 
@@ -64,6 +66,7 @@ private:
   //std::unordered_map<Type::Kind, Type::>
   // Not sure how to do functions yet;
 
+  ScopeStack scopeStack;
   Token expect(Token::Kind);
   Lexer lexer;
   std::vector<Token> tokens;
