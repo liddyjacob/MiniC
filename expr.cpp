@@ -1,16 +1,18 @@
 #include "expr.hpp"
 #include "value.hpp"
- 
+#include <iostream>
 
 // Print an expression!
 void print(Printer& p, Expr* e){
   
+  if (e->kind == Expr::UNDEFINED) {p << "<Undefined type!>"; }
   if (e->kind <= Expr::nullEND){
     if ((e->kind == Expr::intL || e->kind == Expr::boolL) || 
         (e->kind == Expr::floatL))
     {
       Value v =  static_cast<LiteralE*>(e)->val;
       p << v;
+    
     }
     if (e->kind == Expr::idL){
       p << static_cast<IDE*>(e)->decl->name->str;

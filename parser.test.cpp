@@ -1,5 +1,7 @@
 #include "lexer.hpp"
 #include "parser.hpp"
+#include "expr.hpp"
+#include "printer.hpp"
 #include <iterator>
 #include <iostream>
 #include <fstream>
@@ -19,6 +21,9 @@ main(int argc, char* argv[])
   Lexer l(input);
 
   Parser p(l);
-  p.parse_expr(); 
+
+  Printer printer(std::cout);
+  print(printer, p.parse_expr()); 
+  printer.NextLine();
 
 }

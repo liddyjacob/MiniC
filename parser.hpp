@@ -57,6 +57,12 @@ public:
   //Type* parse_type(
 private:
   
+  void init_types();
+  
+  IntT intT;
+  BoolT boolT;
+  //std::unordered_map<Type::Kind, Type::>
+  // Not sure how to do functions yet;
 
   Token expect(Token::Kind);
   Lexer lexer;

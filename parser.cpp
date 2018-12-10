@@ -12,11 +12,12 @@ Token
 Parser::match(Token::Kind kind){
   
   Token& curr = tokens[index];
-  
-  if (curr.kind == kind)
+ 
+  if (curr.kind == kind){
     index++;
-    return curr;
-  
+    return curr; 
+  }
+
   return Token(Token::eof, "NoMatch!");
 }
 Token
