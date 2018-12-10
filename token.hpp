@@ -67,6 +67,9 @@ struct Token
     : kind(k), lexeme(lexeme)
   { }
 
+  Token()
+    : kind(eof), lexeme("DEFAULT")
+  { }
 
   explicit operator bool() const { return kind != eof; }
   

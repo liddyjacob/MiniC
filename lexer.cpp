@@ -112,8 +112,9 @@ Token
 Lexer::match_number(){
   
   char const* iter = first + 1;
-  while (!is_eof(iter) && is_digit(*iter));
+  while (!is_eof(iter) && is_digit(*iter)){
     ++iter;
+  }
 
   std::string name(first, iter);
 

@@ -25,6 +25,8 @@ int main(){
   Expr* boolexpr1 = new BoolE(boolT, trueval);
   Expr* boolexpr2 = new BoolE(boolT, trueval);
   Expr* boolexpr3 = new BoolE(boolT, falseval);
+  
+
 
   // I dont understand why I manually enter the type here.
   Expr* leqexpr = new BinaryE(Expr::le, boolT, intexpr1, intexpr2);
