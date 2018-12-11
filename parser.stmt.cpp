@@ -44,11 +44,14 @@ Stmt* Parser::parse_stmt(StmtType st){
     case StmtType::blockST:
     {
       std::vector<Stmt*> blks;
+      
       while (tokens[index].kind != Token::rbrace) {
         Stmt* s = parse_stmt();
+        // ^ Moves the index
+
         //FIXME: ERROR here?
         blks.push_back(s);
-        ++index;
+        //++index;
       }
 
       expect(Token::rbrace);
@@ -62,10 +65,10 @@ Stmt* Parser::parse_stmt(StmtType st){
       expect(Token::rparen);
       expect(Token::lbrace);
       Stmt* ts = parse_stmt(StmtType::blockST);
-      //expect(Token::else_kw);
-      //expect(Token::lbrace);
-      //Stmt* fs = parse_stmt(StmtType::blockST);
-      //return new IfS(cond, ts, fs);
+      expect(Token::else_kw);
+      expect(Token::lbrace);
+      Stmt* fs = parse_stmt(StmtType::blockST);
+      return new IfS(cond, ts, fs);
     }
     case StmtType::whileST:
     {
