@@ -4,6 +4,17 @@ A compiler for a class project.
 
 ### Recent updated:
 
+* A Lexer and Parser now exist! 
+  * To test the lexer:
+``` 
+./lexertest tests/<filename>.mc
+```
+  * To test the parser:
+``` 
+./parser tests/<filename>.mc
+```
+*Note: The lexer was not complete before its due date, and recieved a low grade. It is now in working condition.*
+
 * Expression type checking is done in *expr\_typing.cpp*, with 
 supplimentary files *expr\_rules.hpp* and *expr\_conv.hpp*
 
@@ -11,8 +22,6 @@ supplimentary files *expr\_rules.hpp* and *expr\_conv.hpp*
 
 ### Updates to come:
 
-* There is no build tree yet, but most tools are separate from their classes, so making a build tree should be easy
-
-* Lexing is the next thing do to after that.
+* Code generation
 
 

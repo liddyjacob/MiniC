@@ -65,8 +65,8 @@ struct Printer{
   }
 
   Printer operator<<(bool out){
-    if (out == true) { os << "TRUE"; }
-    else {os << "FALSE"; }
+    if (out == true) { os << "true"; }
+    else {os << "false"; }
     return *this;
   }
 

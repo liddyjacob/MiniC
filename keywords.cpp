@@ -13,11 +13,16 @@ std::unordered_map<std::string, Token::Kind> keyword_map =
   {"if", Token::if_kw},
   {"else", Token::else_kw},
   {"while", Token::while_kw},
-  
+
   {"return", Token::return_kw},
   {"continue", Token::continue_kw},
   {"break", Token::break_kw},
+
+  {"true", Token::true_kw},
+  {"false", Token::false_kw},
+
   {"and", Token::and_kw}, 
   {"or", Token::or_kw},
   {"not", Token::not_kw} // End of keywords
+  
 };

@@ -26,6 +26,9 @@ struct Token
     continue_kw,
     break_kw,
 
+    true_kw,
+    false_kw,
+
     and_kw, 
     or_kw,
     not_kw, // End of keywords
@@ -51,12 +54,12 @@ struct Token
     lparen,
     rparen = lparen + 1, // End of `ENCAPSULATION`
 
-    eof,
+    eof, // 33
     semicolon, // End of `ENDERS`
     
 
     // Other:
-    colon, 
+    colon,
     arrow,
     identifier,
     integer_literal,

@@ -86,12 +86,31 @@ Parser::parse_expr(ExprType et){
     Expr* left = parse_expr(ExprType::prefixET);
 
     // M' -> `*` PF | `/` PF | `%` PF |NULL
-    Token t1, t2, t3, t4, t5;
-    if   (((( (t1 = match(Token::star)) 
+    //
+    // I did not expect this to get so big,
+    // I know this is a terrible scheme.
+    // Any better ideas are welcome.
+    //
+    // This also does not fit in multiplication, and will lead to some
+    // strange behaviors. !TODO TODO TODO AFRICA TODO TODO TODO!
+    //                    |====================================|
+    //                     * Find a better spot for inequalities
+    //                     * Find a beter scheme for matching!
+    //
+    //
+    // At least I formatted the if statement nicely.
+    Token t1, t2, t3, t4, t5, t6, t7, t8, t9, ta;
+    if   ((((((((( 
+              (t1 = match(Token::star)) 
           ||  (t2 = match(Token::slash))   )
           ||  (t3 = match(Token::and_kw))  )
           ||  (t4 = match(Token::modulus)) ) 
           ||  (t5 = match(Token::leq))     )
+          ||  (t6 = match(Token::geq))     )
+          ||  (t7 = match(Token::eq_eq))   )
+          ||  (t8 = match(Token::lt))      )
+          ||  (t9 = match(Token::gt))      )
+          ||  (ta = match(Token::bang_eq)) )
     {
     do{
 
@@ -101,8 +120,11 @@ Parser::parse_expr(ExprType et){
       if (t3) k = Expr::andE;
       if (t4) k = Expr::rem;
       if (t5) k = Expr::le; 
-
-      std::cerr << "Mul || div || mod\n";
+      if (t6) k = Expr::ge;
+      if (t7) k = Expr::eq;
+      if (t8) k = Expr::lt;
+      if (t9) k = Expr::gt; 
+      if (ta) k = Expr::neq;
 
       // Enforce typing rules:
       Expr* right = parse_expr(ExprType::multiplicativeET);
@@ -125,11 +147,16 @@ Parser::parse_expr(ExprType et){
      
       // Recurse
       left = e;
-    }while   (((( (t1 = match(Token::star)) 
-          || (t2 = match(Token::slash))    )
-          || (t3 = match(Token::or_kw))    )
-          || (t4 = match(Token::modulus)) )
-          || (t5 = match(Token::leq)) );
+    } while   (((((((( 
+              (t1 = match(Token::star)) 
+          ||  (t2 = match(Token::slash))   )
+          ||  (t3 = match(Token::and_kw))  )
+          ||  (t4 = match(Token::modulus)) ) 
+          ||  (t5 = match(Token::leq))     )
+          ||  (t6 = match(Token::geq))     )
+          ||  (t7 = match(Token::eq_eq))   )
+          ||  (t8 = match(Token::lt))      )
+          ||  (t9 = match(Token::gt))      );
     } else {
       e = left;
     }
@@ -148,7 +175,6 @@ Parser::parse_expr(ExprType et){
       Expr::Kind k;
       if (t1) k = Expr::addinv;
       if (t2) k = Expr::mulinv;
-      std::cerr << "negative || recip\n";
 
       Expr* right = parse_expr(ExprType::prefixET);
       e = new UnaryE(k, right->t, right);
@@ -175,16 +201,26 @@ Parser::parse_expr(ExprType et){
   if (et == ExprType::primaryET){
     
     if (Token t = match(Token::integer_literal)){
-      std::cerr << "integer literal: < " << t << " >\n";
+
       Value v(std::stoi(t.lexeme));
       e = new IntE(&intT, v);
-    }
-
-    if (Token t = match(Token::identifier)){
+    
+    } else if (Token t = match(Token::true_kw)){
+      
+      Value v(true);
+      e = new BoolE(&boolT, v);
+    
+    } else if (Token t = match(Token::false_kw)){
+      
+      Value v(false);
+      e = new BoolE(&boolT, v);
+    
+    } else if (Token t = match(Token::identifier)){
+    
       std::string sym = t.lexeme;
       
       // Found an entry!
-      if (Decl* d = scopeStack.lookup(sym)){
+      if (Decl* d = scopestack.lookup(sym)){
 
         Type* t = nullptr; 
         if (d->kind == Decl::objectD) 
@@ -199,12 +235,10 @@ Parser::parse_expr(ExprType et){
         std::cerr << sym << " was not declared in this scope!\n";
         abort();
       }
-      std::cerr << "Identifier: < " << t << " >\n";
     }
 
     if (Token t = match(Token::lparen)){
       
-      std::cerr << "Left paren identifier\n";
     }
   }
 

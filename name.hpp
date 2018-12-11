@@ -6,5 +6,9 @@ struct Name{
     : str(c_str)
   { }
 
+  Name(string str)
+    : str(str)
+  { }
+
   string str;
 };

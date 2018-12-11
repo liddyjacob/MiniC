@@ -43,18 +43,18 @@ Stmt* Parser::parse_stmt(StmtType st){
 
     case StmtType::blockST:
     {
+      scopestack.push_back(Scope());
+    
       std::vector<Stmt*> blks;
       
       while (tokens[index].kind != Token::rbrace) {
         Stmt* s = parse_stmt();
         // ^ Moves the index
-
-        //FIXME: ERROR here?
         blks.push_back(s);
-        //++index;
       }
 
       expect(Token::rbrace);
+      scopestack.pop_back();
       return new BlockS(blks);
     }
 
@@ -97,7 +97,7 @@ Stmt* Parser::parse_stmt(StmtType st){
     case StmtType::declST:
     {
       index--;
-      Decl* d = nullptr;//parse_local_declaration();
+      Decl* d = parse_local_decl();
       return new DeclS(d);
     }
 
@@ -111,4 +111,63 @@ Stmt* Parser::parse_stmt(StmtType st){
       std::cerr << "Error parsing statement\n";
       return nullptr;
   }
+}
+
+
+// Parse a decl and deal with its scope.
+Decl* 
+Parser::parse_local_decl(){
+  Token tvar, tref, tfun;
+  if ((  (tvar = match(Token::var_kw))
+     ||  (tref = match(Token::ref_kw)) )
+     ||  (tfun = match(Token::fun_kw)) )
+  {
+    Decl* d = nullptr;
+    Decl::Kind dk;
+    Token id_tok = expect(Token::identifier);
+
+    if (scopestack.back().lookup(id_tok.lexeme)){
+      std::cerr << "Error: name " << id_tok.lexeme << " already declared in scope!\n";
+      abort();
+    }
+    // Not much common ground for functiond's
+    // fun <id>(`decl-list`) -> return_type Blk-stmt;
+    if (tfun) 
+    {   
+      dk = Decl::functionD;
+      // TODO this
+      return nullptr;
+    }
+
+    // Not a function:
+    // Common ground here.
+    // (var | ref) <id> : <type> = expr;
+    expect(Token::colon);
+    Token type_tok = expect({Token::int_kw, Token::bool_kw});
+    expect(Token::eq);
+
+    Expr* e = parse_expr();
+    Type* t = nullptr;
+    
+    // Find type
+    if (type_tok.kind == Token::int_kw) t = &intT;
+    if (type_tok.kind == Token::bool_kw) t = &boolT;
+
+    Name* n = new Name(id_tok.lexeme);
+
+    if (tvar){
+      d = new ObjectD(n, t, e);
+    }
+    if (tref){
+      d = new ReferenceD(n, t, e);
+    }
+
+    scopestack.back()[id_tok.lexeme] = d;
+    return d;
+  }
+
+  std::cerr << "Declaration expected!\n";
+  abort();
+
+
 }

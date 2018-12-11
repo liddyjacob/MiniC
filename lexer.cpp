@@ -29,8 +29,6 @@ Lexer::lex_next()
         return match(Token::slash, 1);
       case '+':
         return match(Token::plus, 1);
-      case '-':
-        return match(Token::minus, 1);
       case '%':
         return match(Token::modulus, 1);
       case '{':
@@ -45,6 +43,11 @@ Lexer::lex_next()
         return match(Token::semicolon, 1);
       case ':': 
         return match(Token::colon, 1);
+      case '-':
+        if (peek(1) == '>'){
+          return match(Token::arrow, 2);
+        }
+        return match(Token::minus, 1);
       case '=':
 				if (peek(1) == '='){
 					return match(Token::eq_eq, 2);
