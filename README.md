@@ -13,7 +13,7 @@ A compiler for a class project.
 ``` 
 ./parser tests/<filename>.mc
 ```
-*Note: The lexer was not complete before its due date, and recieved a low grade. It is now in working condition.*
+*Note: The lexer was not complete before its due date. but is now in working condition.*
 
 * Expression type checking is done in *expr\_typing.cpp*, with 
 supplimentary files *expr\_rules.hpp* and *expr\_conv.hpp*
