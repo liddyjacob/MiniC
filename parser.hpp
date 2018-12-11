@@ -16,6 +16,7 @@ private:
   // These enumerate the recursively defined languages 
   // for expressions , statements, and declarations.
   enum class ExprType{
+    compareET,
     assignET,
     additiveET,
     multiplicativeET,
@@ -51,7 +52,7 @@ public:
 
   bool verbose;
   
-  Expr* parse_expr(ExprType et = ExprType::assignET);
+  Expr* parse_expr(ExprType et = ExprType::compareET);
   Stmt* parse_stmt();
   Decl* parse_decl(DeclType dt = DeclType::programDT);
   Token match(Token::Kind k);

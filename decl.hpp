@@ -58,6 +58,9 @@ struct FunctionD : Decl{
   FunctionD(Name* n, std::initializer_list<Decl*> parms, Type* t, Stmt* s)
     : Decl(n, functionD), returntype(t), params(parms), body(s)
   { }
+  FunctionD(Name* n, std::vector<Decl*> parms, Type* t, Stmt* s)
+    : Decl(n, functionD), returntype(t), params(parms), body(s)
+  { }
 
   std::vector<Type*> get_return_types();
 

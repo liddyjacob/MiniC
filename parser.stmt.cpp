@@ -98,6 +98,7 @@ Stmt* Parser::parse_stmt(StmtType st){
     {
       index--;
       Decl* d = parse_local_decl();
+      expect(Token::semicolon);
       return new DeclS(d);
     }
 
@@ -112,7 +113,6 @@ Stmt* Parser::parse_stmt(StmtType st){
       return nullptr;
   }
 }
-
 
 // Parse a decl and deal with its scope.
 Decl* 
@@ -130,13 +130,55 @@ Parser::parse_local_decl(){
       std::cerr << "Error: name " << id_tok.lexeme << " already declared in scope!\n";
       abort();
     }
+
+    Name* n = new Name(id_tok.lexeme);
     // Not much common ground for functiond's
     // fun <id>(`decl-list`) -> return_type Blk-stmt;
+    
     if (tfun) 
-    {   
-      dk = Decl::functionD;
-      // TODO this
-      return nullptr;
+    {
+      
+      expect(Token::lparen);
+      
+      // Enter a new scope
+      scopestack.push_back(Scope());
+      std::vector<Decl*> decls;
+
+      while (tokens[index].kind != Token::rparen) {
+        // TODO: Function declarations look different!
+        Decl* d = parse_local_decl();
+        index++;
+        // ^ Moves the index
+        decls.push_back(d);
+      }
+
+      expect(Token::rparen);
+      expect(Token::arrow);
+      
+      Token rtrtype_tok = 
+        expect({Token::int_kw, Token::bool_kw});
+
+      Type* t = nullptr;
+      
+      if (rtrtype_tok.kind == Token::int_kw) {t = &intT;}
+      else if (rtrtype_tok.kind == Token::bool_kw) {t = &boolT;}
+      
+      else {
+        std::cerr << "Error: Expected int or bool for return type of function "
+                  << id_tok.lexeme
+                  << " !\n";
+        abort();
+      }
+      
+      expect(Token::lbrace);
+      Stmt* funct = parse_stmt(StmtType::blockST); 
+      // Exit scope
+      
+      scopestack.pop_back();
+      
+      d = new FunctionD(n, decls, t, funct);
+      scopestack.back()[id_tok.lexeme] = d;
+      return d;
     }
 
     // Not a function:
@@ -153,8 +195,6 @@ Parser::parse_local_decl(){
     if (type_tok.kind == Token::int_kw) t = &intT;
     if (type_tok.kind == Token::bool_kw) t = &boolT;
 
-    Name* n = new Name(id_tok.lexeme);
-
     if (tvar){
       d = new ObjectD(n, t, e);
     }
@@ -168,6 +208,4 @@ Parser::parse_local_decl(){
 
   std::cerr << "Declaration expected!\n";
   abort();
-
-
 }

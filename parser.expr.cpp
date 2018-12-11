@@ -10,6 +10,82 @@ Parser::parse_expr(ExprType et){
 
   Expr* e = nullptr;
 
+  /* 
+   *  Boolean expressions have priority
+   *
+   *
+   */
+  if (et == ExprType::compareET){
+
+    // M -> PF M'
+    Expr* left = parse_expr(ExprType::assignET);
+
+    //
+    // I did not expect this to get so big,
+    // I know this is a terrible scheme.
+    // Any better ideas are welcome.
+    //
+    // This also does not fit in multiplication, and will lead to some
+    // strange behaviors. !TODO TODO TODO AFRICA TODO TODO TODO!
+    //                    |====================================|
+    //                   
+    //                     * Find a beter scheme for matching!
+    //
+    //
+    // At least I formatted the if statement nicely.
+    Token t1, t2, t3, t4, t5, t6;
+    if ((((((
+              (t1 = match(Token::leq))     )
+          ||  (t2 = match(Token::geq))     )
+          ||  (t3 = match(Token::eq_eq))   )
+          ||  (t4 = match(Token::lt))      )
+          ||  (t5 = match(Token::gt))      )
+          ||  (t6 = match(Token::bang_eq)) )
+    {
+    do{
+
+      Expr::Kind k;
+      if (t1) k = Expr::le; 
+      if (t2) k = Expr::ge;
+      if (t3) k = Expr::eq;
+      if (t4) k = Expr::lt;
+      if (t5) k = Expr::gt; 
+      if (t6) k = Expr::neq;
+
+      // Enforce typing rules:
+      Expr* right = parse_expr(ExprType::compareET);
+      Type* temp = new Type(Type::UNDEFINED);
+      e = new BinaryE(k, temp, left, right);
+
+
+      std::cerr << "L,R = " << left << ", " << right << '\n';
+      // Check what rules e broke.
+      Rules broken = broken_rules(e);
+      
+      // If e broke any rules, create a new e;
+      if (!broken.is_empty()){
+        std::vector<Expr*> converted = e->children;
+        convert(converted, broken);
+        delete e;
+        e = new BinaryE(k, temp, converted[0], converted[1]);
+      } 
+      
+      e->t = left->t; 
+      delete temp;
+     
+      // Recurse
+      left = e; 
+    }while ((((((
+              (t1 = match(Token::leq))     )
+          ||  (t2 = match(Token::geq))     )
+          ||  (t3 = match(Token::eq_eq))   )
+          ||  (t4 = match(Token::lt))      )
+          ||  (t5 = match(Token::gt))      )
+          ||  (t6 = match(Token::bang_eq)) );
+    } else {
+      e = left;
+    }
+  }
 
   /*
    * Assign >> Add Assign'
@@ -48,7 +124,6 @@ Parser::parse_expr(ExprType et){
       if (t1) k = Expr::add;
       if (t2) k = Expr::sub;
       if (t3) k = Expr::orE;
-      std::cerr << "Add || sub\n";
       
       // Enforce typing rules:
       Expr* right = parse_expr(ExprType::additiveET);
@@ -86,31 +161,12 @@ Parser::parse_expr(ExprType et){
     Expr* left = parse_expr(ExprType::prefixET);
 
     // M' -> `*` PF | `/` PF | `%` PF |NULL
-    //
-    // I did not expect this to get so big,
-    // I know this is a terrible scheme.
-    // Any better ideas are welcome.
-    //
-    // This also does not fit in multiplication, and will lead to some
-    // strange behaviors. !TODO TODO TODO AFRICA TODO TODO TODO!
-    //                    |====================================|
-    //                     * Find a better spot for inequalities
-    //                     * Find a beter scheme for matching!
-    //
-    //
-    // At least I formatted the if statement nicely.
-    Token t1, t2, t3, t4, t5, t6, t7, t8, t9, ta;
-    if   ((((((((( 
+    Token t1, t2, t3, t4;
+    if   ((( 
               (t1 = match(Token::star)) 
           ||  (t2 = match(Token::slash))   )
           ||  (t3 = match(Token::and_kw))  )
           ||  (t4 = match(Token::modulus)) ) 
-          ||  (t5 = match(Token::leq))     )
-          ||  (t6 = match(Token::geq))     )
-          ||  (t7 = match(Token::eq_eq))   )
-          ||  (t8 = match(Token::lt))      )
-          ||  (t9 = match(Token::gt))      )
-          ||  (ta = match(Token::bang_eq)) )
     {
     do{
 
@@ -119,12 +175,6 @@ Parser::parse_expr(ExprType et){
       if (t2) k = Expr::quo;
       if (t3) k = Expr::andE;
       if (t4) k = Expr::rem;
-      if (t5) k = Expr::le; 
-      if (t6) k = Expr::ge;
-      if (t7) k = Expr::eq;
-      if (t8) k = Expr::lt;
-      if (t9) k = Expr::gt; 
-      if (ta) k = Expr::neq;
 
       // Enforce typing rules:
       Expr* right = parse_expr(ExprType::multiplicativeET);
@@ -147,16 +197,11 @@ Parser::parse_expr(ExprType et){
      
       // Recurse
       left = e;
-    } while   (((((((( 
+    } while   ((( 
               (t1 = match(Token::star)) 
           ||  (t2 = match(Token::slash))   )
           ||  (t3 = match(Token::and_kw))  )
-          ||  (t4 = match(Token::modulus)) ) 
-          ||  (t5 = match(Token::leq))     )
-          ||  (t6 = match(Token::geq))     )
-          ||  (t7 = match(Token::eq_eq))   )
-          ||  (t8 = match(Token::lt))      )
-          ||  (t9 = match(Token::gt))      );
+          ||  (t4 = match(Token::modulus)) ) ;
     } else {
       e = left;
     }
