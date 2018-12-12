@@ -3,7 +3,7 @@
 A compiler for a class project. 
 
 ### Recent updated:
-* Global scope does not exist. To make a file, ALWAYS START WITH A BLOCK STATEMENT.
+* Global scope does not exist. To make a program, ALWAYS ENCLOSE IT WITH A BLOCK STATEMENT.
 
 * A Lexer and Parser now exist! 
   * To test the lexer:
