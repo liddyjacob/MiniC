@@ -60,6 +60,7 @@ struct Token
 
     // Other:
     colon,
+    comma,
     arrow,
     identifier,
     integer_literal,

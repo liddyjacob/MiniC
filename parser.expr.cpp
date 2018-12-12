@@ -10,16 +10,15 @@ Parser::parse_expr(ExprType et){
 
   Expr* e = nullptr;
 
+
   /* 
    *  Boolean expressions have priority
-   *
+   * C 
    *
    */
   if (et == ExprType::compareET){
-
     // M -> PF M'
     Expr* left = parse_expr(ExprType::assignET);
-
     //
     // I did not expect this to get so big,
     // I know this is a terrible scheme.
@@ -57,8 +56,6 @@ Parser::parse_expr(ExprType et){
       Type* temp = new Type(Type::UNDEFINED);
       e = new BinaryE(k, temp, left, right);
 
-
-      std::cerr << "L,R = " << left << ", " << right << '\n';
       // Check what rules e broke.
       Rules broken = broken_rules(e);
       
@@ -135,6 +132,7 @@ Parser::parse_expr(ExprType et){
       
       // If e broke any rules, create a new e;
       if (!broken.is_empty()){
+        std::cerr << "Rules are broken\n"; 
         std::vector<Expr*> converted = e->children;
         convert(converted, broken);
         delete e;
@@ -236,12 +234,33 @@ Parser::parse_expr(ExprType et){
   if (et == ExprType::postfixET){
     e = parse_expr(ExprType::primaryET);
         
+    std::vector<Expr*> args;
     if (match(Token::lparen)){
-      //TODO THIS IS BROKEN s
+      
+      int i = 0;
+      while (tokens[index].kind != Token::rparen){
+        Expr* arg = parse_expr();
+        
+        if (tokens[index].kind != Token::rparen){
+            expect(Token::comma);
+        }
+        args.push_back(arg);
+        ++i;
+      }
+      if (i != static_cast<FunctionD*>(
+            static_cast<IDE*>(e)->decl)->params.size()){
+        std::cerr << "Not enough arguments in function " << static_cast<IDE*>(e)->decl->name->str << "!";
+        abort();
+      }
+      
       expect(Token::rparen);
-      std::cerr << "WARNING: Postfix `()` not impl. yet\n";
-    }
-  } 
+      // TODO no check on function call arguments
+      e = new Fn_callE(static_cast<IDE*>(e), args);
+      
+    }    
+      //TODO THIS IS BROKEN
+  }
+   
 
   if (et == ExprType::primaryET){
     
@@ -268,27 +287,25 @@ Parser::parse_expr(ExprType et){
       if (Decl* d = scopestack.lookup(sym)){
 
         Type* t = nullptr; 
-        if (d->kind == Decl::objectD) 
-          { t = static_cast<ObjectD*>(d)->type; }
-        if (d->kind == Decl::referenceD) 
-          { t = static_cast<ReferenceD*>(d)->reftype; }
         if (d->kind == Decl::functionD) 
           { t = new FunT(static_cast<FunctionD*>(d)->get_return_types(),
-                         static_cast<FunctionD*>(d)->returntype);}
-        e = new IDE(t, d);
-      } else {
-        std::cerr << sym << " was not declared in this scope!\n";
-        abort();
-      }
-    }
-
-    if (Token t = match(Token::lparen)){
-      
+                         static_cast<FunctionD*>(d)->returntype);} 
+          if (d->kind == Decl::objectD) 
+            { t = static_cast<ObjectD*>(d)->type; }
+          if (d->kind == Decl::referenceD) 
+            { t = static_cast<ReferenceD*>(d)->reftype; }
+          e = new IDE(t, d);
+        } else {
+          std::cerr << sym << " was not declared in this scope!\n";
+          abort();
+        } 
+    
+    } else if (Token t = match(Token::lparen)){
+      // Parentheses restart
+      e = parse_expr(ExprType::compareET);
+      expect(Token::rparen);
     }
   }
 
   return e;
 }
-  
-
-

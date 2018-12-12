@@ -36,7 +36,7 @@ int main(){
   Expr* eqexpr2 = new BinaryE(Expr::eq, boolT, boolexpr1, boolexpr3);
   Expr* addexpr = new BinaryE(Expr::add, intT, intexpr1, intexpr2);
 
-  Expr* not_well_formed = new BinaryE(Expr::eq, boolT, boolexpr1, addexpr);
+  Expr* not_well_formed = new BinaryE(Expr::add, boolT, boolexpr1, addexpr);
 
   std::cout << "ILL FORMED(but convertable) EXPRESSION:\n";
   print(p, not_well_formed); std::cout << '\n';

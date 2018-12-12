@@ -29,7 +29,7 @@ Rules broken_rules(Expr* e){
   }
 
   // Just need to pass one of these rules.
-  if (found_pass != true){ broken_rules.RST_rules.clear(); }
+  if (found_pass){ broken_rules.RST_rules.clear(); }
 
   for (RET ret_rule : rules.RET_rules){
     if (!pass_ret(e->children, ret_rule)){
@@ -80,8 +80,7 @@ bool pass_ret(vector<Expr*> e_vect, RET ret_rule){
      
       if (e_vect[arg_i]->t->kind != e_vect[arg_j]->t->kind){
         return false;
-      }
-  
+      }  
   }
   return true;
 
@@ -143,19 +142,19 @@ std::unordered_map<Expr::Kind, Rules, EnumHash> EXPR_RULES
     {Expr::negate,    Rules({RST(0, Type::boolT)}, { }, { })},
     {Expr::assign,    RET_0_1}, //FIXME check if left is `assignable`
     
-    {Expr::add,       INT_0_1 + FLOAT_0_1},
-    {Expr::sub,/*---*/INT_0_1 + FLOAT_0_1},
-    {Expr::mul,       INT_0_1 + FLOAT_0_1},
-    {Expr::quo,/*---*/INT_0_1 + FLOAT_0_1}, // FIXME Requires nonzero den.
-    {Expr::rem,       INT_0_1}, // ints only!
+    {Expr::add,       RET_0_1},
+    {Expr::sub,/*---*/RET_0_1}, //+ FLOAT_0_1},
+    {Expr::mul,       RET_0_1}, //+ FLOAT_0_1},
+    {Expr::quo,/*---*/RET_0_1}, //+ FLOAT_0_1}, // FIXME Requires nonzero den.
+    {Expr::rem,       RET_0_1}, // ints only!
 
     {Expr::andE,      BOOL_0_1},
     {Expr::orE,       BOOL_0_1},
 
-    {Expr::lt,        INT_0_1 + FLOAT_0_1},
-    {Expr::le,        INT_0_1 + FLOAT_0_1},
-    {Expr::gt,        INT_0_1 + FLOAT_0_1},
-    {Expr::ge,        INT_0_1 + FLOAT_0_1},
+    {Expr::lt,        RET_0_1},//INT_0_1 + FLOAT_0_1},
+    {Expr::le,        RET_0_1},//INT_0_1 + FLOAT_0_1},
+    {Expr::gt,        RET_0_1},//INT_0_1 + FLOAT_0_1},
+    {Expr::ge,        RET_0_1},//INT_0_1 + FLOAT_0_1},
 
     {Expr::eq,        RET_0_1}, // any type
     {Expr::neq,       RET_0_1}, // any type

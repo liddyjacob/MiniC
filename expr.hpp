@@ -11,7 +11,7 @@
 
 //struct Value;
 struct Decl;
-
+struct FunctionD;
 
 // This is a minimalist expression implementation
 // There are some missing safty features, but the
@@ -22,10 +22,6 @@ struct Decl;
 // unusual data type (eventually). Some
 // sort of group theory thing would be
 // cool.
-
-
-
-
 using std::string;
 struct Expr{
   // Kind of expression.
@@ -80,6 +76,7 @@ struct Expr{
   }
 
   Expr(Kind k, Type* t, std::initializer_list<Expr*> list);
+  Expr(Kind k, Type* t, std::vector<Expr*> list);
   //virtual Type* check() = 0;
   //virtual void print(std::ostream& os) const = 0;
 
@@ -90,6 +87,14 @@ struct Expr{
 
 inline
 Expr::Expr(Kind k, Type* t, std::initializer_list<Expr*> list)
+  : kind(k), t(t), children(list)
+{ 
+  if ((BEGIN > kind) || (END < kind)){
+    throw std::runtime_error ("Invalid Expression");
+  }
+}
+inline
+Expr::Expr(Kind k, Type* t, std::vector<Expr*> list)
   : kind(k), t(t), children(list)
 { 
   if ((BEGIN > kind) || (END < kind)){
@@ -125,10 +130,25 @@ struct BinaryE : Expr{
 // Not sure how do deal with funtions yet.
 struct KaryE : Expr{
 
+
   KaryE(Kind k, Type* t, std::initializer_list<Expr*> list)
     : Expr(k, t, list)
   { }
+  KaryE(Kind k, Type* t, std::vector<Expr*> list)
+    : Expr(k, t, list)
+  { }
+};
 
+
+//IDentifyer Expression
+struct IDE : Expr
+{
+  // Construct d:
+  IDE(Type* t, Decl* d)
+    : Expr(idL, t, {}), decl(d)
+  { }
+
+  Decl* decl;
 };
 
 struct Fn_callE : KaryE{
@@ -136,8 +156,8 @@ struct Fn_callE : KaryE{
     : KaryE(fn_call, t, list)
   { }
 
-
-  Expr*& fn_IDE(){return children[0];}
+  Fn_callE(IDE* fn, std::vector<Expr*> args);
+  IDE* fn_IDE(){return static_cast<IDE*>(children[0]);}
 };
 
 // Literals are nullary
@@ -170,17 +190,6 @@ struct ImplicitConvE : UnaryE{
 
 };
 
-
-//IDentifyer Expression
-struct IDE : Expr
-{
-  // Construct d:
-  IDE(Type* t, Decl* d)
-    : Expr(idL, t, {}), decl(d)
-  { }
-
-  Decl* decl;
-};
 
 void print(Printer& p, Expr* e);
 void print_sexpr(Printer& p, Expr* e);

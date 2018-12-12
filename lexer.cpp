@@ -43,6 +43,8 @@ Lexer::lex_next()
         return match(Token::semicolon, 1);
       case ':': 
         return match(Token::colon, 1);
+      case ',':
+        return match(Token::comma, 1);
       case '-':
         if (peek(1) == '>'){
           return match(Token::arrow, 2);

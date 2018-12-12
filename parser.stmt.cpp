@@ -101,7 +101,6 @@ Stmt* Parser::parse_stmt(StmtType st){
       expect(Token::semicolon);
       return new DeclS(d);
     }
-
     case StmtType::exprST:
     {
       Expr* e = parse_expr();
@@ -147,7 +146,11 @@ Parser::parse_local_decl(){
       while (tokens[index].kind != Token::rparen) {
         // TODO: Function declarations look different!
         Decl* d = parse_local_decl();
-        index++;
+
+        if (tokens[index].kind != Token::rparen){
+          expect(Token::comma);
+        }
+
         // ^ Moves the index
         decls.push_back(d);
       }

@@ -101,6 +101,21 @@ void print(Printer& p, Expr* e){
     p.indent = indent;
     return;
   }
+  if (e->kind == Expr::fn_call){
+    Fn_callE* fn = static_cast<Fn_callE*>(e);
+    p << fn->fn_IDE()->decl->name->str;
+    p << "(";
+    for (int i = 1; i < fn->children.size(); ++i)
+    {
+      print(p, fn->children[i]);
+      if (i + 1 != fn->children.size()){
+        p << ", ";
+      }
+    }
+    p << ")";
+    return ;
+  }
+  
 }
 
 // Print into an sexpr
@@ -201,4 +216,16 @@ void print_sexpr(Printer& p, Expr* e){
   }
 
 }
+
+Fn_callE::Fn_callE(IDE* fn, std::vector<Expr*> args)
+    : KaryE(fn_call, static_cast<FunctionD*>(fn->decl)->returntype,
+            std::vector<Expr*>())
+  {
+
+    children.push_back(fn);
+
+    for (Expr* arg : args){
+      children.push_back(arg);
+    }
+  }
 

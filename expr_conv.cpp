@@ -104,20 +104,21 @@ bool convert(std::vector<Expr*>& e_vect, Rules broken_rules){
  
   for (RST rst_rule : broken_rules.RST_rules){
     Type::Kind to = rst_rule.kind;
-    
+
     for (int i : rst_rule.arg_vect){
       Type::Kind from = e_vect[i]->t->kind;
 
       // Big memory problem:
       Type* toType = new Type(to);
       
-      if (converts_to(from, to)){
-        Expr* conversion = new ImplicitConvE(toType, e_vect[i]);
-        e_vect[i] = conversion;
-      }
-      
-      else {
-        return false;
+      if (from != to){
+        if (converts_to(from, to)){
+          Expr* conversion = new ImplicitConvE(toType, e_vect[i]);
+          e_vect[i] = conversion;
+        }
+        else {
+          return false;
+        }
       }
     
     }
